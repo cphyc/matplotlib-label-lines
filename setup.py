@@ -9,7 +9,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='matplotlib-label-lines',
+    name='matplotlib_label_lines',
     version='0.2.0-2',
     description='Label lines in matplotlib.',
     long_description=readme,
