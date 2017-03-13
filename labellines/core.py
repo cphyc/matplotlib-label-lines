@@ -1,6 +1,9 @@
 from math import atan2, degrees
 import numpy as np
 
+from matplotlib.dates import date2num
+from datetime import datetime
+
 
 # Label line with line2D label data
 def labelLine(line, x, label=None, align=True, **kwargs):
@@ -8,6 +11,10 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     ax = line.get_axes()
     xdata = line.get_xdata()
     ydata = line.get_ydata()
+
+    # Convert datetime objects to floats
+    if isinstance(x, datetime):
+        x = date2num(x)
 
     if (x < xdata[0]) or (x > xdata[-1]):
         print('x label location is outside data range!')
@@ -63,7 +70,6 @@ def labelLine(line, x, label=None, align=True, **kwargs):
 
 def labelLines(lines, align=True, xvals=None, **kwargs):
     '''Label all lines with their respective legends.'''
-
     ax = lines[0].get_axes()
     labLines = []
     labels = []
