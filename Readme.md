@@ -5,3 +5,7 @@ From http://stackoverflow.com/questions/16992038/inline-labels-in-matplotlib
 
 ## Install
 
+Just do:
+```bash
+pip install matplotlib-label-lines
+```
