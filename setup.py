@@ -10,7 +10,7 @@ with open('LICENSE') as f:
 
 setup(
     name='matplotlib-label-lines',
-    version='0.2.0',
+    version='0.2.0-2',
     description='Label lines in matplotlib.',
     long_description=readme,
     author='Corentin Cadiou',
