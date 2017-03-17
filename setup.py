@@ -9,8 +9,8 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='matplotlib_label_lines',
-    version='0.2.0-2',
+    name='matplotlib-label-lines',
+    version='0.3.0',
     description='Label lines in matplotlib.',
     long_description=readme,
     author='Corentin Cadiou',

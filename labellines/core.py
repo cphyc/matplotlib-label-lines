@@ -69,7 +69,12 @@ def labelLine(line, x, label=None, align=True, **kwargs):
 
 
 def labelLines(lines, align=True, xvals=None, **kwargs):
-    '''Label all lines with their respective legends.'''
+    '''Label all lines with their respective legends.
+
+    xvals: (xfirst, xlast) or array of position. If a tuple is provided, the
+    labels will be located between xfirst and xlast (in the axis units)
+
+    '''
     ax = lines[0].get_axes()
     labLines = []
     labels = []
@@ -81,7 +86,9 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
             labLines.append(line)
             labels.append(label)
 
-    if xvals is None:
+    if type(xvals) == tuple:
+        xvals = np.linspace(xvals[0], xvals[1], len(labLines)+2)[1:-1]
+    elif xvals is None:
         xmin, xmax = ax.get_xlim()
         xvals = np.linspace(xmin, xmax, len(labLines)+2)[1:-1]
 
