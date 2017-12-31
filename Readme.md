@@ -11,6 +11,7 @@ pip install matplotlib-label-lines
 ```
 and then:
 ```python
+import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import loglaplace,chi2
 
