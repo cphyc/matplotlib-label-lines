@@ -8,7 +8,7 @@ from datetime import datetime
 # Label line with line2D label data
 def labelLine(line, x, label=None, align=True, **kwargs):
     '''Label a single matplotlib line at position x'''
-    ax = line.get_axes()
+    ax = line.axes
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 
@@ -57,7 +57,7 @@ def labelLine(line, x, label=None, align=True, **kwargs):
         kwargs['va'] = 'center'
 
     if 'backgroundcolor' not in kwargs:
-        kwargs['backgroundcolor'] = ax.get_axis_bgcolor()
+        kwargs['backgroundcolor'] = ax.get_facecolor()
 
     if 'clip_on' not in kwargs:
         kwargs['clip_on'] = True
@@ -75,7 +75,7 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
     labels will be located between xfirst and xlast (in the axis units)
 
     '''
-    ax = lines[0].get_axes()
+    ax = lines[0].axes
     labLines = []
     labels = []
 
