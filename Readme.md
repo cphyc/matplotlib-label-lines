@@ -66,3 +66,4 @@ labelLines(plt.gca().get_lines(), xvals=(0.1, 1), zorder=2.5)
 
 plt.show()
 ```
+![Example](https://raw.githubusercontent.com/cphyc/matplotlib-label-lines/master/example.png)
