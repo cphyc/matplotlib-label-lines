@@ -80,8 +80,17 @@ def test_align():
 
     labelLines(lines, align=False)
 
+@image_comparison(baseline_images=['labels_range'],
+                  extensions=['png'])
+def test_labels_range():
+    x = np.linspace(0, 1)
 
-def test_range():
+    plt.plot(x, np.sin(x), label='$\sin x$')
+    plt.plot(x, np.cos(x), label='$\cos x$')
+
+    labelLines(plt.gca().get_lines(), xvals=(0, .5))
+
+def test_label_range():
     x = np.linspace(0, 1)
     line = plt.plot(x, x**2)[0]
 
