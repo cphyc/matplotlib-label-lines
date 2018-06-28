@@ -7,7 +7,19 @@ from datetime import datetime
 
 # Label line with line2D label data
 def labelLine(line, x, label=None, align=True, **kwargs):
-    '''Label a single matplotlib line at position x'''
+    '''Label a single matplotlib line at position x
+
+    Parameters
+    ----------
+    line : matplotlib.lines.Line
+       The line holding the label
+    x : number
+       The location in data unit of the label
+    label : string, optional
+       The label to set. This is inferred from the line by default
+    kwargs : dict, optional
+       Optional arguments passed to ax.text
+    '''
     ax = line.axes
     xdata = line.get_xdata()
     ydata = line.get_ydata()
@@ -17,8 +29,7 @@ def labelLine(line, x, label=None, align=True, **kwargs):
         x = date2num(x)
 
     if (x < xdata[0]) or (x > xdata[-1]):
-        print('x label location is outside data range!')
-        return
+        raise Exception('x label location is outside data range!')
 
     # Find corresponding y co-ordinate and angle of the
     ip = 1
@@ -71,9 +82,18 @@ def labelLine(line, x, label=None, align=True, **kwargs):
 def labelLines(lines, align=True, xvals=None, **kwargs):
     '''Label all lines with their respective legends.
 
-    xvals: (xfirst, xlast) or array of position. If a tuple is provided, the
-    labels will be located between xfirst and xlast (in the axis units)
-
+    Parameters
+    ----------
+    lines : list of matplotlib lines
+       The lines to label
+    align : boolean, optional
+       If True, the label will be aligned with the slope of the line
+       at the location of the label. If False, they will be horizontal.
+    xvals : (xfirst, xlast) or array of float, optional
+       The location of the labels. If a tuple, the labels will be
+       evenly spaced between xfirst and xlast (in the axis units).
+    kwargs : dict, optional
+       Optional arguments passed to ax.text
     '''
     ax = lines[0].axes
     labLines = []
