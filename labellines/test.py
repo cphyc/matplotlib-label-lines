@@ -1,10 +1,11 @@
 import matplotlib as mpl
 mpl.use('Agg')
 
-from labellines import labelLines
+from labellines import labelLines, labelLine
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.testing.decorators import image_comparison
+from numpy.testing import assert_raises
 
 
 @image_comparison(baseline_images=['labels_linear'],
@@ -67,3 +68,17 @@ def test_xylogspace():
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel('$x$')
     plt.ylabel('$f(x)$')
+
+
+def test_range():
+    x = np.linspace(0, 1)
+    line = plt.plot(x, x**2)[0]
+
+    # This should fail
+    with assert_raises(Exception):
+        labelLine(line, -1)
+    with assert_raises(Exception):
+        labelLine(line, 2)
+
+    # This should work
+    labelLine(line, 0.5)
