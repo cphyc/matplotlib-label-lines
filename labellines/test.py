@@ -1,3 +1,6 @@
+import matplotlib as mpl
+mpl.use('Agg')
+
 from labellines import labelLines
 import numpy as np
 import matplotlib.pyplot as plt
