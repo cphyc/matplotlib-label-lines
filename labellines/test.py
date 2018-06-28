@@ -70,6 +70,17 @@ def test_xylogspace():
     plt.ylabel('$f(x)$')
 
 
+@image_comparison(baseline_images=['labels_align'],
+                  extensions=['png'])
+def test_align():
+    x = np.linspace(0, 2*np.pi)
+    y = np.sin(x)
+
+    lines = plt.plot(x, y, label='$sin(x)$')
+
+    labelLines(lines, align=False)
+
+
 def test_range():
     x = np.linspace(0, 1)
     line = plt.plot(x, x**2)[0]
