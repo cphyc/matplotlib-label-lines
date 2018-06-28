@@ -4,6 +4,7 @@ python:
  - "3.6"
 install:
  - pip install .
- - pip install nose
+ - pip install nose codecov
 script:
- - nosetests labellines
+ - nosetests labellines --with-coverage
+
