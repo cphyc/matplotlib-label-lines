@@ -110,5 +110,5 @@ def test_negative_spacing():
 
     line = plt.plot(x, y)[0]
 
+    # Should not throw an error
     labelLine(line, 0.2, label='Test')
-    plt.savefig('/tmp/test.pdf')
