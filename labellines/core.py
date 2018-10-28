@@ -24,11 +24,16 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 
+    order = np.argsort(xdata)
+    xdata = xdata[order]
+    ydata = ydata[order]
+
     # Convert datetime objects to floats
     if isinstance(x, datetime):
         x = date2num(x)
 
-    if (x < xdata[0]) or (x > xdata[-1]):
+    xmin, xmax = xdata[0], xdata[-1]
+    if (x < xmin) or (x > xmax):
         raise Exception('x label location is outside data range!')
 
     # Find corresponding y co-ordinate and angle of the

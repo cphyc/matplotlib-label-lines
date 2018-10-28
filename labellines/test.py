@@ -102,3 +102,13 @@ def test_label_range():
 
     # This should work
     labelLine(line, 0.5)
+
+def test_negative_spacing():
+    plt.clf()
+    x = np.linspace(1, -1)
+    y = x**2
+
+    line = plt.plot(x, y)[0]
+
+    labelLine(line, 0.2, label='Test')
+    plt.savefig('/tmp/test.pdf')
