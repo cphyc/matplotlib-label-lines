@@ -1,12 +1,13 @@
 import matplotlib as mpl
 mpl.use('Agg')
 
+from datetime import datetime
 from labellines import labelLines, labelLine
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.dates import DayLocator, DateFormatter, UTC
 from matplotlib.testing.decorators import image_comparison
 from numpy.testing import assert_raises
-
 
 @image_comparison(baseline_images=['labels_linear'],
                   extensions=['png'])
@@ -89,6 +90,59 @@ def test_labels_range():
     plt.plot(x, np.cos(x), label='$\cos x$')
 
     labelLines(plt.gca().get_lines(), xvals=(0, .5))
+
+
+@image_comparison(baseline_images=['labels_dateaxis'],
+                  extensions=['png'])
+def test_dateaxis_naive():
+    dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
+
+    plt.plot(dates, [0, 5, 3], label='apples')
+    plt.plot(dates, [3, 6, 2], label='banana')
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(DayLocator())
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
+    labelLines(ax.get_lines())
+
+
+@image_comparison(baseline_images=['labels_dateaxis_advanced'],
+                  extensions=['png'])
+def test_dateaxis_advanced():
+    dates = [datetime(2018, 11, 1, tzinfo=UTC), datetime(2018, 11, 2, tzinfo=UTC),
+             datetime(2018, 11, 5, tzinfo=UTC), datetime(2018, 11, 3, tzinfo=UTC)]
+
+    plt.plot(dates, [0, 5, 3, 0], label='apples')
+    plt.plot(dates, [3, 6, 2, 1], label='banana')
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(DayLocator())
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
+    labelLines(ax.get_lines())
+
+
+@image_comparison(baseline_images=['labels_polar'],
+                  extensions=['png'])
+def test_polar():
+    t = np.linspace(0, 2 * np.pi, num=128)
+    plt.plot(np.cos(t), np.sin(t), label='$1/1$')
+    plt.plot(np.cos(t), np.sin(2 * t), label='$1/2$')
+    plt.plot(np.cos(3 * t), np.sin(t), label='$3/1$')
+    ax = plt.gca()
+
+    labelLines(ax.get_lines())
+
+
+@image_comparison(baseline_images=['labels_non_uniform_and_negative_spacing'],
+                  extensions=['png'])
+def test_non_uniform_and_negative_spacing():
+    x = [1, -2, -3, 2, -4, -3]
+    plt.plot(x, [1, 2, 3, 4, 2, 1], '.-', label='apples')
+    plt.plot(x, [6, 5, 4, 2, 5, 5], 'o-', label='banana')
+    ax = plt.gca()
+
+    labelLines(ax.get_lines())
+
 
 def test_label_range():
     x = np.linspace(0, 1)
