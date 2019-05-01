@@ -1,99 +1,95 @@
-import matplotlib as mpl
-mpl.use('Agg')
-
-from datetime import datetime
 from labellines import labelLines, labelLine
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import DayLocator, DateFormatter, UTC
-from matplotlib.testing.decorators import image_comparison
 from numpy.testing import assert_raises
 
-@image_comparison(baseline_images=['labels_linear'],
-                  extensions=['png'])
+import pytest
+
+@pytest.mark.mpl_image_compare
 def test_linspace():
     plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(x, np.sin(k * x), label='$f(x)=sin(%s x)$' % k)
+        plt.plot(x, np.sin(k * x), label=r'$f(x)=\sin(%s x)$' % k)
 
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel('$x$')
     plt.ylabel('$f(x)$')
+    return plt.gcf()
 
-@image_comparison(baseline_images=['labels_ylog'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_ylogspace():
     plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(x, np.exp(k * x), label='$f(x)=exp(%s x)$' % k)
+        plt.plot(x, np.exp(k * x), label=r'$f(x)=\exp(%s x)$' % k)
 
     plt.yscale('log')
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel('$x$')
     plt.ylabel('$f(x)$')
+    return plt.gcf()
 
-@image_comparison(baseline_images=['labels_xlog'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_xlogspace():
     plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(10**x, k*x, label='$f(x)=%s x$' % k)
+        plt.plot(10**x, k*x, label=r'$f(x)=%s x$' % k)
 
     plt.xscale('log')
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel('$x$')
     plt.ylabel('$f(x)$')
+    return plt.gcf()
 
-
-@image_comparison(baseline_images=['labels_xylog'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_xylogspace():
     plt.clf()
     x = np.geomspace(1e-1, 1e1)
     K = np.arange(-5, 5, 2)
 
     for k in K:
-        plt.plot(x, x**k, label='$f(x)=x^{%s}$' % k)
+        plt.plot(x, x**k, label=r'$f(x)=x^{%s}$' % k)
 
     plt.xscale('log')
     plt.yscale('log')
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel('$x$')
     plt.ylabel('$f(x)$')
+    return plt.gcf()
 
 
-@image_comparison(baseline_images=['labels_align'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_align():
     x = np.linspace(0, 2*np.pi)
     y = np.sin(x)
 
-    lines = plt.plot(x, y, label='$sin(x)$')
+    lines = plt.plot(x, y, label=r'$\sin(x)$')
 
     labelLines(lines, align=False)
+    return plt.gcf()
 
-@image_comparison(baseline_images=['labels_range'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_labels_range():
     x = np.linspace(0, 1)
 
-    plt.plot(x, np.sin(x), label='$\sin x$')
-    plt.plot(x, np.cos(x), label='$\cos x$')
+    plt.plot(x, np.sin(x), label=r'$\sin x$')
+    plt.plot(x, np.cos(x), label=r'$\cos x$')
 
     labelLines(plt.gca().get_lines(), xvals=(0, .5))
+    return plt.gcf()
 
 
-@image_comparison(baseline_images=['labels_dateaxis'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_dateaxis_naive():
     dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
 
@@ -104,10 +100,10 @@ def test_dateaxis_naive():
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
 
     labelLines(ax.get_lines())
+    return plt.gcf()
 
 
-@image_comparison(baseline_images=['labels_dateaxis_advanced'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_dateaxis_advanced():
     dates = [datetime(2018, 11, 1, tzinfo=UTC), datetime(2018, 11, 2, tzinfo=UTC),
              datetime(2018, 11, 5, tzinfo=UTC), datetime(2018, 11, 3, tzinfo=UTC)]
@@ -119,10 +115,10 @@ def test_dateaxis_advanced():
     ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
 
     labelLines(ax.get_lines())
+    return plt.gcf()
 
 
-@image_comparison(baseline_images=['labels_polar'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_polar():
     t = np.linspace(0, 2 * np.pi, num=128)
     plt.plot(np.cos(t), np.sin(t), label='$1/1$')
@@ -131,10 +127,10 @@ def test_polar():
     ax = plt.gca()
 
     labelLines(ax.get_lines())
+    return plt.gcf()
 
 
-@image_comparison(baseline_images=['labels_non_uniform_and_negative_spacing'],
-                  extensions=['png'])
+@pytest.mark.mpl_image_compare
 def test_non_uniform_and_negative_spacing():
     x = [1, -2, -3, 2, -4, -3]
     plt.plot(x, [1, 2, 3, 4, 2, 1], '.-', label='apples')
@@ -142,7 +138,7 @@ def test_non_uniform_and_negative_spacing():
     ax = plt.gca()
 
     labelLines(ax.get_lines())
-
+    return plt.gcf()
 
 def test_label_range():
     x = np.linspace(0, 1)
