@@ -1,9 +1,10 @@
 # matplotlib-label-lines
 [![Build Status](https://travis-ci.org/cphyc/matplotlib-label-lines.svg?branch=master)](https://travis-ci.org/cphyc/matplotlib-label-lines)
 [![codecov](https://codecov.io/gh/cphyc/matplotlib-label-lines/branch/master/graph/badge.svg)](https://codecov.io/gh/cphyc/matplotlib-label-lines)
-Label line using matplotlib.
 
-From http://stackoverflow.com/questions/16992038/inline-labels-in-matplotlib (original code from NauticalMile).
+Easily label line(s) using matplotlib.
+
+The code is heavily based on http://stackoverflow.com/questions/16992038/inline-labels-in-matplotlib (original code from NauticalMile).
 
 ## Install
 

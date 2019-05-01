@@ -1,7 +1,7 @@
 from math import atan2, degrees
 import numpy as np
 
-from matplotlib.dates import date2num
+from matplotlib.dates import date2num, DateConverter, num2date
 from datetime import datetime
 
 
@@ -24,43 +24,32 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 
-    order = np.argsort(xdata)
-    xdata = xdata[order]
-    ydata = ydata[order]
-
-    # Convert datetime objects to floats
-    if isinstance(x, datetime):
-        x = date2num(x)
-
-    xmin, xmax = xdata[0], xdata[-1]
-    if (x < xmin) or (x > xmax):
+    # Find first segment of xdata containing x
+    for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
+        if min(xa, xb) <= x <= max(xa, xb):
+            break
+    else:
         raise Exception('x label location is outside data range!')
 
-    # Find corresponding y co-ordinate and angle of the
-    ip = 1
-    for i in range(len(xdata)):
-        if x < xdata[i]:
-            ip = i
-            break
+    def x_to_float(x):
+        """Make sure datetime values are properly converted to floats."""
+        return date2num(x) if isinstance(x, datetime) else x
 
-    y = ydata[ip-1] + (ydata[ip]-ydata[ip-1]) * \
-        (x-xdata[ip-1])/(xdata[ip]-xdata[ip-1])
+    xfa = x_to_float(xa)
+    xfb = x_to_float(xb)
+    ya = ydata[i]
+    yb = ydata[i + 1]
+    y = ya + (yb - ya) * (x_to_float(x) - xfa) / (xfb - xfa)
 
     if not label:
         label = line.get_label()
 
     if align:
-        # Compute the slope
-        dx = xdata[ip] - xdata[ip-1]
-        dy = ydata[ip] - ydata[ip-1]
-        ang = degrees(atan2(dy, dx))
-
-        # Transform to screen co-ordinates
-        pt = np.array([x, y]).reshape((1, 2))
-        trans_angle = ax.transData.transform_angles(np.array((ang, )), pt)[0]
-
+        # Compute the slope and label rotation
+        screen_dx, screen_dy = ax.transData.transform((xfa, ya)) - ax.transData.transform((xfb, yb))
+        rotation = (degrees(atan2(screen_dy, screen_dx)) + 90) % 180 - 90
     else:
-        trans_angle = 0
+        rotation = 0
 
     # Set a bunch of keyword arguments
     if 'color' not in kwargs:
@@ -81,7 +70,7 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     if 'zorder' not in kwargs:
         kwargs['zorder'] = 2.5
 
-    ax.text(x, y, label, rotation=trans_angle, **kwargs)
+    ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
 def labelLines(lines, align=True, xvals=None, **kwargs):
@@ -120,6 +109,10 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
             xvals = np.logspace(np.log10(xmin), np.log10(xmax), len(labLines)+2)[1:-1]
         else:
             xvals = np.linspace(xmin, xmax, len(labLines)+2)[1:-1]
+
+        if isinstance(ax.xaxis.converter, DateConverter):
+            # Convert float values back to datetime in case of datetime axis
+            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
 
     for line, x, label in zip(labLines, xvals, labels):
         labelLine(line, x, label, align, **kwargs)
