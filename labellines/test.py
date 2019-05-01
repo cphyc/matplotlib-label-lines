@@ -1,6 +1,8 @@
 from labellines import labelLines, labelLine
+from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.dates import DayLocator, DateFormatter, UTC
 from numpy.testing import assert_raises
 
 import pytest
@@ -84,6 +86,58 @@ def test_labels_range():
     plt.plot(x, np.cos(x), label=r'$\cos x$')
 
     labelLines(plt.gca().get_lines(), xvals=(0, .5))
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_dateaxis_naive():
+    dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
+
+    plt.plot(dates, [0, 5, 3], label='apples')
+    plt.plot(dates, [3, 6, 2], label='banana')
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(DayLocator())
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
+    labelLines(ax.get_lines())
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_dateaxis_advanced():
+    dates = [datetime(2018, 11, 1, tzinfo=UTC), datetime(2018, 11, 2, tzinfo=UTC),
+             datetime(2018, 11, 5, tzinfo=UTC), datetime(2018, 11, 3, tzinfo=UTC)]
+
+    plt.plot(dates, [0, 5, 3, 0], label='apples')
+    plt.plot(dates, [3, 6, 2, 1], label='banana')
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(DayLocator())
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
+    labelLines(ax.get_lines())
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_polar():
+    t = np.linspace(0, 2 * np.pi, num=128)
+    plt.plot(np.cos(t), np.sin(t), label='$1/1$')
+    plt.plot(np.cos(t), np.sin(2 * t), label='$1/2$')
+    plt.plot(np.cos(3 * t), np.sin(t), label='$3/1$')
+    ax = plt.gca()
+
+    labelLines(ax.get_lines())
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_non_uniform_and_negative_spacing():
+    x = [1, -2, -3, 2, -4, -3]
+    plt.plot(x, [1, 2, 3, 4, 2, 1], '.-', label='apples')
+    plt.plot(x, [6, 5, 4, 2, 5, 5], 'o-', label='banana')
+    ax = plt.gca()
+
+    labelLines(ax.get_lines())
     return plt.gcf()
 
 def test_label_range():
