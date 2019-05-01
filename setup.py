@@ -14,6 +14,7 @@ setup(
     description='Label lines in matplotlib.',
     long_description=readme,
     author='Corentin Cadiou',
+    author_email='contact@cphyc.me',
     url='https://github.com/cphyc/matplotlib-label-lines',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
