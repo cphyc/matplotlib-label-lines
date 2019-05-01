@@ -1,7 +1,9 @@
 from math import atan2, degrees
 import numpy as np
+import matplotlib.pyplot as plt
 
 from matplotlib.dates import date2num, DateConverter, num2date
+from matplotlib.container import ErrorbarContainer
 from datetime import datetime
 
 
@@ -90,18 +92,26 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
        Optional arguments passed to ax.text
     '''
     ax = lines[0].axes
-    labLines = []
-    labels = []
+
+    labLines, labels = [], []
+    handles, allLabels = ax.get_legend_handles_labels()
+
+    all_lines = []
+    for h in handles:
+        if isinstance(h, ErrorbarContainer):
+            all_lines.append(h.lines[0])
+        else:
+            all_lines.append(h)
 
     # Take only the lines which have labels other than the default ones
     for line in lines:
-        label = line.get_label()
-        if "_line" not in label:
+        if line in all_lines:
+            label = allLabels[all_lines.index(line)]
             labLines.append(line)
             labels.append(label)
 
     if xvals is None:
-        xvals = ax.get_xlim() # set axis limits as annotation limits, xvals now a tuple
+        xvals = ax.get_xlim()  # set axis limits as annotation limits, xvals now a tuple
     if type(xvals) == tuple:
         xmin, xmax = xvals
         xscale = ax.get_xscale()
@@ -112,7 +122,8 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
 
         if isinstance(ax.xaxis.converter, DateConverter):
             # Convert float values back to datetime in case of datetime axis
-            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
+            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) 
+                     for x in xvals]
 
     for line, x, label in zip(labLines, xvals, labels):
         labelLine(line, x, label, align, **kwargs)

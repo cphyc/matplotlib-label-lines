@@ -140,6 +140,23 @@ def test_non_uniform_and_negative_spacing():
     labelLines(ax.get_lines())
     return plt.gcf()
 
+@pytest.mark.mpl_image_compare
+def test_errorbar():
+    x = np.linspace(0, 1, 20)
+
+    y = x**0.5
+    dy = x
+    plt.errorbar(x, y, yerr=dy, label=r'$\sqrt{x}\pm x$')
+
+    y = x**3
+    dy = x
+    plt.errorbar(x, y, yerr=dy, label=r'$x^3\pm x$')
+
+    ax = plt.gca()
+    labelLines(ax.get_lines())
+    return plt.gcf()
+
+
 def test_label_range():
     x = np.linspace(0, 1)
     line = plt.plot(x, x**2)[0]
