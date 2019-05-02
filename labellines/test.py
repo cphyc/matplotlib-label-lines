@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import DayLocator, DateFormatter, UTC
 from numpy.testing import assert_raises
+import warnings
 
 import pytest
 
@@ -156,6 +157,20 @@ def test_errorbar():
     labelLines(ax.get_lines())
     return plt.gcf()
 
+def test_nan_warning():
+    x = np.array([0, 1, 2, 3])
+    y = np.array([np.nan, np.nan, 0, 1])
+
+    line = plt.plot(x, y)[0]
+
+    with warnings.catch_warnings(record=True) as w:
+        labelLine(line, 0.5)
+        assert issubclass(w[-1].category, UserWarning)
+        assert "could not be annotated" in str(w[-1].message)
+
+    with warnings.catch_warnings(record=True) as w:
+        labelLine(line, 2.5)
+        assert len(w) == 0
 
 def test_label_range():
     x = np.linspace(0, 1)
