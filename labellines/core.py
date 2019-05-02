@@ -1,4 +1,5 @@
 from math import atan2, degrees
+import warnings
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,6 +27,10 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 
+    mask = np.isfinite(ydata)
+    if mask.sum() == 0:
+        raise Exception('The line %s only contains nan!' % line)
+
     # Find first segment of xdata containing x
     for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
         if min(xa, xb) <= x <= max(xa, xb):
@@ -42,6 +47,12 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     ya = ydata[i]
     yb = ydata[i + 1]
     y = ya + (yb - ya) * (x_to_float(x) - xfa) / (xfb - xfa)
+
+    if not (np.isfinite(ya) and np.isfinite(yb)):
+        warnings.warn(("%s could not be annotated due to `nans` values. "
+                       "Consider using another location via the `x` argument.") % line,
+                      UserWarning)
+        return
 
     if not label:
         label = line.get_label()
@@ -122,7 +133,7 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
 
         if isinstance(ax.xaxis.converter, DateConverter):
             # Convert float values back to datetime in case of datetime axis
-            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) 
+            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units())
                      for x in xvals]
 
     for line, x, label in zip(labLines, xvals, labels):
