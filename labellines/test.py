@@ -157,11 +157,12 @@ def test_errorbar():
     labelLines(ax.get_lines())
     return plt.gcf()
 
+
 def test_nan_warning():
     x = np.array([0, 1, 2, 3])
     y = np.array([np.nan, np.nan, 0, 1])
 
-    line = plt.plot(x, y)[0]
+    line = plt.plot(x, y, label='test')[0]
 
     with warnings.catch_warnings(record=True) as w:
         labelLine(line, 0.5)
@@ -171,6 +172,14 @@ def test_nan_warning():
     with warnings.catch_warnings(record=True) as w:
         labelLine(line, 2.5)
         assert len(w) == 0
+
+def test_nan_failure():
+    x = np.array([0, 1])
+    y = np.array([np.nan, np.nan])
+
+    line = plt.plot(x, y, label='test')[0]
+    with assert_raises(Exception):
+        labelLine(line, 0.5)
 
 def test_label_range():
     x = np.linspace(0, 1)
