@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 # Label line with line2D label data
-def labelLine(line, x, label=None, align=True, **kwargs):
+def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     '''Label a single matplotlib line at position x
 
     Parameters
@@ -20,6 +20,9 @@ def labelLine(line, x, label=None, align=True, **kwargs):
        The location in data unit of the label
     label : string, optional
        The label to set. This is inferred from the line by default
+    drop_label : bool, optional
+       If True, the label is consumed by the function so that subsequent calls to e.g. legend
+       do not use it anymore.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     '''
@@ -57,6 +60,9 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     if not label:
         label = line.get_label()
 
+    if drop_label:
+        line.set_label(None)
+
     if align:
         # Compute the slope and label rotation
         screen_dx, screen_dy = ax.transData.transform((xfa, ya)) - ax.transData.transform((xfb, yb))
@@ -86,7 +92,7 @@ def labelLine(line, x, label=None, align=True, **kwargs):
     ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
-def labelLines(lines, align=True, xvals=None, **kwargs):
+def labelLines(lines, align=True, xvals=None, drop_label=False, **kwargs):
     '''Label all lines with their respective legends.
 
     Parameters
@@ -99,6 +105,9 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
     xvals : (xfirst, xlast) or array of float, optional
        The location of the labels. If a tuple, the labels will be
        evenly spaced between xfirst and xlast (in the axis units).
+    drop_label : bool, optional
+       If True, the label is consumed by the function so that subsequent calls to e.g. legend
+       do not use it anymore.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     '''
@@ -137,4 +146,4 @@ def labelLines(lines, align=True, xvals=None, **kwargs):
                      for x in xvals]
 
     for line, x, label in zip(labLines, xvals, labels):
-        labelLine(line, x, label, align, **kwargs)
+        labelLine(line, x, label, align, drop_label, **kwargs)
