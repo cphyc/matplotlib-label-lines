@@ -35,11 +35,16 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
         raise Exception('The line %s only contains nan!' % line)
 
     # Find first segment of xdata containing x
-    for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-        if min(xa, xb) <= x <= max(xa, xb):
-            break
+    if len(xdata) == 2:
+        i = 0
+        xa = min(xdata)
+        xb = max(xdata)
     else:
-        raise Exception('x label location is outside data range!')
+        for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
+            if min(xa, xb) <= x <= max(xa, xb):
+                break
+        else:
+            raise Exception('x label location is outside data range!')
 
     def x_to_float(x):
         """Make sure datetime values are properly converted to floats."""
