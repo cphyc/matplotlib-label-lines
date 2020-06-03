@@ -48,7 +48,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
 
     def x_to_float(x):
         """Make sure datetime values are properly converted to floats."""
-v        return date2num(x) if isinstance(x, datetime) else x
+        return date2num(x) if isinstance(x, datetime) else x
 
     xfa = x_to_float(xa)
     xfb = x_to_float(xb)
