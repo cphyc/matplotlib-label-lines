@@ -94,7 +94,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     if 'zorder' not in kwargs:
         kwargs['zorder'] = 2.5
 
-    ax.text(x, y, label, rotation=rotation, **kwargs)
+    return ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
 def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs):
@@ -154,6 +154,9 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.
             # Convert float values back to datetime in case of datetime axis
             xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units())
                      for x in xvals]
-
+    
+    txts = []
     for line, x, label in zip(labLines, xvals, labels):
-        labelLine(line, x, label, align, drop_label, **kwargs)
+        txts.append(labelLine(line, x, label, align, drop_label, **kwargs))
+    
+    return txts
