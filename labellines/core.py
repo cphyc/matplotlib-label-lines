@@ -26,20 +26,24 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     kwargs : dict, optional
        Optional arguments passed to ax.text
     '''
-    def ensure_float(datetm):
+    def ensure_float(value):
         """Make sure datetime values are properly converted to floats."""
-        # the last two boolean checks are for arrays with datetime64 and with a timezone
-        # see these SO posts:
-        # https://stackoverflow.com/q/60714568/4549682
-        # https://stackoverflow.com/q/23063362/4549682
-        if isinstance(datetm, datetime) \
-        or isinstance(datetm, np.datetime64) \
-        or np.issubdtype(datetm.dtype, np.datetime64) \
-        or (str(datetm.dtype).startswith("datetime64")) \
-        or datetm.dtype == 'O':
-            return date2num(datetm)
-        else:
-            return datetm
+        try:
+            # the last 3 boolean checks are for arrays with datetime64 and with a timezone
+            # see these SO posts:
+            # https://stackoverflow.com/q/60714568/4549682
+            # https://stackoverflow.com/q/23063362/4549682
+            # somewhere, the datetime64 with timezone is getting converted to 'O' dtype
+            if isinstance(value, datetime) \
+            or isinstance(value, np.datetime64) \
+            or np.issubdtype(value.dtype, np.datetime64) \
+            or str(value.dtype).startswith("datetime64") \
+            or value.dtype == 'O':
+                return date2num(value)
+            else:  # another numpy dtype like float64
+                return value
+        except AttributeError:  # possibly int or other float/int dtype
+            return value
 
 
     ax = line.axes
