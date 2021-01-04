@@ -26,8 +26,24 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     kwargs : dict, optional
        Optional arguments passed to ax.text
     '''
+    def ensure_float(datetm):
+        """Make sure datetime values are properly converted to floats."""
+        # the last two boolean checks are for arrays with datetime64 and with a timezone
+        # see these SO posts:
+        # https://stackoverflow.com/q/60714568/4549682
+        # https://stackoverflow.com/q/23063362/4549682
+        if isinstance(datetm, datetime) \
+        or isinstance(datetm, np.datetime64) \
+        or np.issubdtype(datetm.dtype, np.datetime64) \
+        or (str(datetm.dtype).startswith("datetime64")) \
+        or datetm.dtype == 'O':
+            return date2num(datetm)
+        else:
+            return datetm
+
+
     ax = line.axes
-    xdata = line.get_xdata()
+    xdata = ensure_float(line.get_xdata())
     ydata = line.get_ydata()
 
     mask = np.isfinite(ydata)
@@ -41,20 +57,16 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
         xb = max(xdata)
     else:
         for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-            if min(xa, xb) <= x <= max(xa, xb):
+            if min(xa, xb) <= ensure_float(x) <= max(xa, xb):
                 break
         else:
             raise Exception('x label location is outside data range!')
 
-    def x_to_float(x):
-        """Make sure datetime values are properly converted to floats."""
-        return date2num(x) if isinstance(x, datetime) else x
-
-    xfa = x_to_float(xa)
-    xfb = x_to_float(xb)
+    xfa = ensure_float(xa)
+    xfb = ensure_float(xb)
     ya = ydata[i]
     yb = ydata[i + 1]
-    y = ya + (yb - ya) * (x_to_float(x) - xfa) / (xfb - xfa)
+    y = ya + (yb - ya) * (ensure_float(x) - xfa) / (xfb - xfa)
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
         warnings.warn(("%s could not be annotated due to `nans` values. "
@@ -94,7 +106,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     if 'zorder' not in kwargs:
         kwargs['zorder'] = 2.5
 
-    return ax.text(x, y, label, rotation=rotation, **kwargs)
+    ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
 def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs):
