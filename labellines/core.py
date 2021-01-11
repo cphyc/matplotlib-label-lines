@@ -100,10 +100,10 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     if 'zorder' not in kwargs:
         kwargs['zorder'] = 2.5
 
-    ax.text(x, y, label, rotation=rotation, **kwargs)
+    return ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
-def labelLines(lines, align=True, xvals=None, drop_label=False, **kwargs):
+def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs):
     '''Label all lines with their respective legends.
 
     Parameters
@@ -119,6 +119,8 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, **kwargs):
     drop_label : bool, optional
        If True, the label is consumed by the function so that subsequent calls to e.g. legend
        do not use it anymore.
+    shrink_factor : double, optional
+       Relative distance from the edges to place closest labels. Defaults to 0.05.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     '''
@@ -143,6 +145,9 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, **kwargs):
 
     if xvals is None:
         xvals = ax.get_xlim()  # set axis limits as annotation limits, xvals now a tuple
+        xvals_rng = xvals[1] - xvals[0]
+        shrinkage = xvals_rng * shrink_factor
+        xvals = (xvals[0] + shrinkage, xvals[1] - shrinkage)
     if type(xvals) == tuple:
         xmin, xmax = xvals
         xscale = ax.get_xscale()
@@ -155,6 +160,9 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, **kwargs):
             # Convert float values back to datetime in case of datetime axis
             xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units())
                      for x in xvals]
-
+    
+    txts = []
     for line, x, label in zip(labLines, xvals, labels):
-        labelLine(line, x, label, align, drop_label, **kwargs)
+        txts.append(labelLine(line, x, label, align, drop_label, **kwargs))
+    
+    return txts

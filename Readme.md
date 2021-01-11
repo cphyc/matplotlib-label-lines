@@ -12,7 +12,7 @@ Just do:
 ```bash
 pip install matplotlib-label-lines
 ```
-You can try it online on binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cphyc/matplotlib-label-lines/master) or use the following script:
+You can try it online on binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/cphyc/matplotlib-label-lines/master), get some inspiration from [the example](https://github.com/cphyc/matplotlib-label-lines/blob/master/example/matplotlib_label_lines.ipynb) or from the following script:
 ```python
 import numpy as np
 from matplotlib import pyplot as plt
