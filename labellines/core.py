@@ -70,7 +70,13 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     xfb = ensure_float(xb)
     ya = ydata[i]
     yb = ydata[i + 1]
-    y = ya + (yb - ya) * (ensure_float(x) - xfa) / (xfb - xfa)
+
+    # Handle vertical case
+    if xfb == xfa:
+        fraction = 0.5
+    else:
+        fraction = (ensure_float(x) - xfa) / (xfb - xfa)
+    y = ya + (yb - ya) * fraction
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
         warnings.warn(("%s could not be annotated due to `nans` values. "
