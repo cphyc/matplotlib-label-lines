@@ -209,7 +209,7 @@ def test_label_range(setupMpl):
         labelLine(line, 2)
 
     # This should work
-    labelLine(line, 0.5)
+    labelLine(line, 0.5 , yoffset=.1)
 
     return plt.gcf()
 
@@ -223,4 +223,13 @@ def test_negative_spacing(setupMpl):
 
     # Should not throw an error
     labelLine(line, 0.2, label="Test")
+
+
+def test_yoffset():
+    x = np.linspace(0, 1)
+
+    plt.plot(x, np.sin(x), label=r'$\sin x$')
+    plt.plot(x, np.cos(x), label=r'$\cos x$')
+
+    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffset= .08, bbox={'alpha': 0})
     return plt.gcf()
