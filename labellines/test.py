@@ -229,13 +229,13 @@ def test_yoffset():
     x = np.linspace(0, 1)
 
     for yoffset in (
-        [-.1, .08],   # try lists
+        [-0.5, 0.5],   # try lists
         1,            # try int
-        2.0           # try float
+        1.2           # try float
     ):
         plt.clf()
         ax = plt.gca()
-        ax.plot(x, np.sin(x), label=r'$\sin x$')
-        ax.plot(x, np.cos(x), label=r'$\cos x$')
+        ax.plot(x, np.sin(x)*10, label=r'$\sin x$')
+        ax.plot(x, np.cos(x)*10, label=r'$\cos x$')
         lines = ax.get_lines()
-        labelLines(lines, xvals=(0, .7), align=False, yoffsets=yoffset, bbox={'alpha': 0})
+        labelLines(lines, xvals=(0.2, 0.7), align=False, yoffsets=yoffset, bbox={'alpha': 0})
