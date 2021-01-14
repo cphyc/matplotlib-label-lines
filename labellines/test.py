@@ -8,9 +8,11 @@ import warnings
 
 import pytest
 
+def setup_module(module):
+     plt.clf()
+
 @pytest.mark.mpl_image_compare
 def test_linspace():
-    plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -24,7 +26,6 @@ def test_linspace():
 
 @pytest.mark.mpl_image_compare
 def test_ylogspace():
-    plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -39,7 +40,6 @@ def test_ylogspace():
 
 @pytest.mark.mpl_image_compare
 def test_xlogspace():
-    plt.clf()
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -54,7 +54,6 @@ def test_xlogspace():
 
 @pytest.mark.mpl_image_compare
 def test_xylogspace():
-    plt.clf()
     x = np.geomspace(1e-1, 1e1)
     K = np.arange(-5, 5, 2)
 
@@ -195,7 +194,6 @@ def test_label_range():
     labelLine(line, 0.5)
 
 def test_negative_spacing():
-    plt.clf()
     x = np.linspace(1, -1)
     y = x**2
 
