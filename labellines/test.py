@@ -8,7 +8,7 @@ from matplotlib.dates import UTC, DateFormatter, DayLocator
 from matplotlib.testing import setup
 from numpy.testing import assert_raises
 
-from labellines import labelLine, labelLines
+from .core import labelLine, labelLines
 
 
 @pytest.fixture()
@@ -231,5 +231,5 @@ def test_yoffset():
     plt.plot(x, np.sin(x), label=r'$\sin x$')
     plt.plot(x, np.cos(x), label=r'$\cos x$')
 
-    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffset= .08, bbox={'alpha': 0})
+    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffsets= .08, bbox={'alpha': 0})
     return plt.gcf()

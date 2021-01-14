@@ -132,7 +132,7 @@ def labelLines(
        calls to e.g. legend do not use it anymore.
     shrink_factor : double, optional
        Relative distance from the edges to place closest labels. Defaults to 0.05.
-    yoffset : double, optional
+    yoffsets : number or list, optional. If number, the same value is applied to all lines. Default 0.
         Space to add to labels y position
     kwargs : dict, optional
        Optional arguments passed to ax.text
@@ -174,7 +174,9 @@ def labelLines(
             xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
 
     txts = []
-    for line, x, label in zip(labLines, xvals, labels):
+    if type(yoffsets) == float:
+        yoffsets = [yoffsets]*len(labLines)
+    for line, x, yoffset, labels in zip(labLines, xvals, yoffsets, labels):
         txts.append(labelLine(line, x, label, align, drop_label, yoffset, **kwargs))
 
     return txts
