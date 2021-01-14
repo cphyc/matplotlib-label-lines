@@ -228,8 +228,14 @@ def test_negative_spacing(setupMpl):
 def test_yoffset():
     x = np.linspace(0, 1)
 
-    plt.plot(x, np.sin(x), label=r'$\sin x$')
-    plt.plot(x, np.cos(x), label=r'$\cos x$')
-
-    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffsets= [-.1, .08], bbox={'alpha': 0})
-    return plt.gcf()
+    for yoffset in (
+        [-.1, .08],   # try lists
+        1,            # try int
+        2.0           # try float
+    ):
+        plt.clf()
+        ax = plt.gca()
+        ax.plot(x, np.sin(x), label=r'$\sin x$')
+        ax.plot(x, np.cos(x), label=r'$\cos x$')
+        lines = ax.get_lines()
+        labelLines(lines, xvals=(0, .7), align=False, yoffsets=yoffset, bbox={'alpha': 0})
