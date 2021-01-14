@@ -8,6 +8,6 @@ install:
  - pip install 'pytest>=4.4.1' pytest-cov pytest-mpl
  - pip install codecov
 script:
- - pytest --cov=./
+ - pytest --cov=./ --mpl
  - codecov
 
