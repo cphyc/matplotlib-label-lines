@@ -174,8 +174,10 @@ def labelLines(
             xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
 
     txts = []
-    if type(yoffsets) == float:
-        yoffsets = [yoffsets]*len(labLines)
+    try:
+        yoffsets = [float(yoffsets)] * len(labLines)
+    except TypeError:
+        pass
     for line, x, yoffset, labels in zip(labLines, xvals, yoffsets, labels):
         txts.append(labelLine(line, x, label, align, drop_label, yoffset, **kwargs))
 
