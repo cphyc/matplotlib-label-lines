@@ -178,7 +178,7 @@ def labelLines(
         yoffsets = [float(yoffsets)] * len(labLines)
     except TypeError:
         pass
-    for line, x, yoffset, labels in zip(labLines, xvals, yoffsets, labels):
+    for line, x, yoffset, label in zip(labLines, xvals, yoffsets, labels):
         txts.append(labelLine(line, x, label, align, drop_label, yoffset, **kwargs))
 
     return txts
