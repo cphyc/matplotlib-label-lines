@@ -1,8 +1,9 @@
 language: python
 dist: xenial
 python:
- - "3.6"
  - "3.7"
+ - "3.8"
+ - "3.9"
 install:
  - pip install .
  - pip install 'pytest>=4.4.1' pytest-cov pytest-mpl
