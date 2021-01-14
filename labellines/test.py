@@ -209,7 +209,7 @@ def test_label_range(setupMpl):
         labelLine(line, 2)
 
     # This should work
-    labelLine(line, 0.5 , yoffset=.1)
+    labelLine(line, 0.5)
 
     return plt.gcf()
 
@@ -231,5 +231,5 @@ def test_yoffset():
     plt.plot(x, np.sin(x), label=r'$\sin x$')
     plt.plot(x, np.cos(x), label=r'$\cos x$')
 
-    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffsets= .08, bbox={'alpha': 0})
+    labelLines(plt.gca().get_lines(), xvals=(0, .7), align=False, yoffsets= [-.1, .08], bbox={'alpha': 0})
     return plt.gcf()
