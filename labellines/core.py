@@ -2,7 +2,6 @@ import warnings
 from datetime import datetime
 from math import atan2, degrees
 
-import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, date2num, num2date
@@ -21,8 +20,8 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     label : string, optional
        The label to set. This is inferred from the line by default
     drop_label : bool, optional
-       If True, the label is consumed by the function so that subsequent calls to e.g. legend
-       do not use it anymore.
+       If True, the label is consumed by the function so that subsequent
+       calls to e.g. legend do not use it anymore.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
@@ -40,8 +39,9 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
         xa = min(xdata)
         xb = max(xdata)
     else:
-        for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
+        for imatch, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
             if min(xa, xb) <= x <= max(xa, xb):
+                i = imatch
                 break
         else:
             raise Exception("x label location is outside data range!")
@@ -126,8 +126,8 @@ def labelLines(
        The location of the labels. If a tuple, the labels will be
        evenly spaced between xfirst and xlast (in the axis units).
     drop_label : bool, optional
-       If True, the label is consumed by the function so that subsequent calls to e.g. legend
-       do not use it anymore.
+       If True, the label is consumed by the function so that subsequent
+       calls to e.g. legend do not use it anymore.
     shrink_factor : double, optional
        Relative distance from the edges to place closest labels. Defaults to 0.05.
     kwargs : dict, optional
