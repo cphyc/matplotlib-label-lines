@@ -27,6 +27,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
+
     def ensure_float(value):
         """Make sure datetime values are properly converted to floats."""
         try:
@@ -35,11 +36,13 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
             # https://stackoverflow.com/q/60714568/4549682
             # https://stackoverflow.com/q/23063362/4549682
             # somewhere, the datetime64 with timezone is getting converted to 'O' dtype
-            if isinstance(value, datetime) \
-            or isinstance(value, np.datetime64) \
-            or np.issubdtype(value.dtype, np.datetime64) \
-            or str(value.dtype).startswith("datetime64") \
-            or value.dtype == 'O':
+            if (
+                isinstance(value, datetime)
+                or isinstance(value, np.datetime64)
+                or np.issubdtype(value.dtype, np.datetime64)
+                or str(value.dtype).startswith("datetime64")
+                or value.dtype == "O"
+            ):
                 return date2num(value)
             else:  # another numpy dtype like float64
                 return value

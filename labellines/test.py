@@ -222,24 +222,32 @@ def test_negative_spacing(setupMpl):
     line = plt.plot(x, y)[0]
 
     # Should not throw an error
-    labelLine(line, 0.2, label='Test')
+    labelLine(line, 0.2, label="Test")
     return plt.gcf()
 
 
 def test_label_datetime_plot(setupMpl):
     plt.clf()
     # data from the chinook database of iTunes music sales
-    x = np.array(['2009-01-31T00:00:00.000000000', '2009-02-28T00:00:00.000000000',
-       '2009-03-31T00:00:00.000000000', '2009-04-30T00:00:00.000000000',
-       '2009-06-30T00:00:00.000000000', '2009-09-30T00:00:00.000000000',
-       '2009-10-31T00:00:00.000000000', '2009-11-30T00:00:00.000000000'],
-      dtype='datetime64[ns]')
+    x = np.array(
+        [
+            "2009-01-31T00:00:00.000000000",
+            "2009-02-28T00:00:00.000000000",
+            "2009-03-31T00:00:00.000000000",
+            "2009-04-30T00:00:00.000000000",
+            "2009-06-30T00:00:00.000000000",
+            "2009-09-30T00:00:00.000000000",
+            "2009-10-31T00:00:00.000000000",
+            "2009-11-30T00:00:00.000000000",
+        ],
+        dtype="datetime64[ns]",
+    )
     y = np.array([13.86, 14.85, 28.71, 42.57, 61.38, 76.23, 77.22, 81.18])
 
     line = plt.plot_date(x, y)[0]
 
     # should not throw an error
-    labelLine(line, x[1], 'USA')
+    labelLine(line, x[1], "USA")
 
 
 def test_yoffset(setupMpl):
