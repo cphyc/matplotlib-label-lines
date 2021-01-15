@@ -226,6 +226,7 @@ def test_negative_spacing(setupMpl):
     return plt.gcf()
 
 
+@pytest.mark.mpl_image_compare
 def test_label_datetime_plot(setupMpl):
     plt.clf()
     # data from the chinook database of iTunes music sales
@@ -244,10 +245,14 @@ def test_label_datetime_plot(setupMpl):
     )
     y = np.array([13.86, 14.85, 28.71, 42.57, 61.38, 76.23, 77.22, 81.18])
 
-    line = plt.plot_date(x, y)[0]
+    line = plt.plot_date(x, y, "-")[0]
+    plt.xticks(rotation=45)
 
     # should not throw an error
-    labelLine(line, x[1], "USA")
+    xlabel = datetime(2009, 3, 15)
+    labelLine(line, xlabel, "USA")
+    plt.tight_layout()
+    return plt.gcf()
 
 
 def test_yoffset(setupMpl):
