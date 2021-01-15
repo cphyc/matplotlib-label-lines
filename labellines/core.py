@@ -27,8 +27,30 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
+
+    def ensure_float(value):
+        """Make sure datetime values are properly converted to floats."""
+        try:
+            # the last 3 boolean checks are for arrays with datetime64 and with
+            # a timezone, see these SO posts:
+            # https://stackoverflow.com/q/60714568/4549682
+            # https://stackoverflow.com/q/23063362/4549682
+            # somewhere, the datetime64 with timezone is getting converted to 'O' dtype
+            if (
+                isinstance(value, datetime)
+                or isinstance(value, np.datetime64)
+                or np.issubdtype(value.dtype, np.datetime64)
+                or str(value.dtype).startswith("datetime64")
+                or value.dtype == "O"
+            ):
+                return date2num(value)
+            else:  # another numpy dtype like float64
+                return value
+        except AttributeError:  # possibly int or other float/int dtype
+            return value
+
     ax = line.axes
-    xdata = line.get_xdata()
+    xdata = ensure_float(line.get_xdata())
     ydata = line.get_ydata()
 
     mask = np.isfinite(ydata)
@@ -42,18 +64,14 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
         xb = max(xdata)
     else:
         for imatch, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-            if min(xa, xb) <= x <= max(xa, xb):
+            if min(xa, xb) <= ensure_float(x) <= max(xa, xb):
                 i = imatch
                 break
         else:
             raise Exception("x label location is outside data range!")
 
-    def x_to_float(x):
-        """Make sure datetime values are properly converted to floats."""
-        return date2num(x) if isinstance(x, datetime) else x
-
-    xfa = x_to_float(xa)
-    xfb = x_to_float(xb)
+    xfa = ensure_float(xa)
+    xfb = ensure_float(xb)
     ya = ydata[i]
     yb = ydata[i + 1]
 
@@ -61,7 +79,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     if xfb == xfa:
         fraction = 0.5
     else:
-        fraction = (x_to_float(x) - xfa) / (xfb - xfa)
+        fraction = (ensure_float(x) - xfa) / (xfb - xfa)
     y = ya + (yb - ya) * fraction + yoffset
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
@@ -109,7 +127,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     if "zorder" not in kwargs:
         kwargs["zorder"] = 2.5
 
-    return ax.text(x, y, label, rotation=rotation, **kwargs)
+    ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
 def labelLines(
