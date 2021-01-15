@@ -132,8 +132,9 @@ def labelLines(
        calls to e.g. legend do not use it anymore.
     shrink_factor : double, optional
        Relative distance from the edges to place closest labels. Defaults to 0.05.
-    yoffsets : number or list, optional. If number, the same value is applied to all lines. Default 0.
-        Space to add to labels y position
+    yoffsets : number or list, optional.
+        Distance relative to the line when positioning the labels. If given a number,
+        the same value is used for all lines.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
