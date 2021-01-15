@@ -1,16 +1,16 @@
-from math import atan2, degrees
 import warnings
-import numpy as np
-import matplotlib.pyplot as plt
-
-from matplotlib.dates import date2num, DateConverter, num2date
-from matplotlib.container import ErrorbarContainer
 from datetime import datetime
+from math import atan2, degrees
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.container import ErrorbarContainer
+from matplotlib.dates import DateConverter, date2num, num2date
 
 
 # Label line with line2D label data
 def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
-    '''Label a single matplotlib line at position x
+    """Label a single matplotlib line at position x
 
     Parameters
     ----------
@@ -25,14 +25,14 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
        do not use it anymore.
     kwargs : dict, optional
        Optional arguments passed to ax.text
-    '''
+    """
     ax = line.axes
     xdata = line.get_xdata()
     ydata = line.get_ydata()
 
     mask = np.isfinite(ydata)
     if mask.sum() == 0:
-        raise Exception('The line %s only contains nan!' % line)
+        raise Exception("The line %s only contains nan!" % line)
 
     # Find first segment of xdata containing x
     if len(xdata) == 2:
@@ -44,7 +44,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
             if min(xa, xb) <= x <= max(xa, xb):
                 break
         else:
-            raise Exception('x label location is outside data range!')
+            raise Exception("x label location is outside data range!")
 
     def x_to_float(x):
         """Make sure datetime values are properly converted to floats."""
@@ -63,9 +63,14 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     y = ya + (yb - ya) * fraction
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
-        warnings.warn(("%s could not be annotated due to `nans` values. "
-                       "Consider using another location via the `x` argument.") % line,
-                      UserWarning)
+        warnings.warn(
+            (
+                "%s could not be annotated due to `nans` values. "
+                "Consider using another location via the `x` argument."
+            )
+            % line,
+            UserWarning,
+        )
         return
 
     if not label:
@@ -76,35 +81,39 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
 
     if align:
         # Compute the slope and label rotation
-        screen_dx, screen_dy = ax.transData.transform((xfa, ya)) - ax.transData.transform((xfb, yb))
+        screen_dx, screen_dy = ax.transData.transform(
+            (xfa, ya)
+        ) - ax.transData.transform((xfb, yb))
         rotation = (degrees(atan2(screen_dy, screen_dx)) + 90) % 180 - 90
     else:
         rotation = 0
 
     # Set a bunch of keyword arguments
-    if 'color' not in kwargs:
-        kwargs['color'] = line.get_color()
+    if "color" not in kwargs:
+        kwargs["color"] = line.get_color()
 
-    if ('horizontalalignment' not in kwargs) and ('ha' not in kwargs):
-        kwargs['ha'] = 'center'
+    if ("horizontalalignment" not in kwargs) and ("ha" not in kwargs):
+        kwargs["ha"] = "center"
 
-    if ('verticalalignment' not in kwargs) and ('va' not in kwargs):
-        kwargs['va'] = 'center'
+    if ("verticalalignment" not in kwargs) and ("va" not in kwargs):
+        kwargs["va"] = "center"
 
-    if 'backgroundcolor' not in kwargs:
-        kwargs['backgroundcolor'] = ax.get_facecolor()
+    if "backgroundcolor" not in kwargs:
+        kwargs["backgroundcolor"] = ax.get_facecolor()
 
-    if 'clip_on' not in kwargs:
-        kwargs['clip_on'] = True
+    if "clip_on" not in kwargs:
+        kwargs["clip_on"] = True
 
-    if 'zorder' not in kwargs:
-        kwargs['zorder'] = 2.5
+    if "zorder" not in kwargs:
+        kwargs["zorder"] = 2.5
 
     return ax.text(x, y, label, rotation=rotation, **kwargs)
 
 
-def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs):
-    '''Label all lines with their respective legends.
+def labelLines(
+    lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs
+):
+    """Label all lines with their respective legends.
 
     Parameters
     ----------
@@ -123,7 +132,7 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.
        Relative distance from the edges to place closest labels. Defaults to 0.05.
     kwargs : dict, optional
        Optional arguments passed to ax.text
-    '''
+    """
     ax = lines[0].axes
 
     labLines, labels = [], []
@@ -152,17 +161,16 @@ def labelLines(lines, align=True, xvals=None, drop_label=False, shrink_factor=0.
         xmin, xmax = xvals
         xscale = ax.get_xscale()
         if xscale == "log":
-            xvals = np.logspace(np.log10(xmin), np.log10(xmax), len(labLines)+2)[1:-1]
+            xvals = np.logspace(np.log10(xmin), np.log10(xmax), len(labLines) + 2)[1:-1]
         else:
-            xvals = np.linspace(xmin, xmax, len(labLines)+2)[1:-1]
+            xvals = np.linspace(xmin, xmax, len(labLines) + 2)[1:-1]
 
         if isinstance(ax.xaxis.converter, DateConverter):
             # Convert float values back to datetime in case of datetime axis
-            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units())
-                     for x in xvals]
-    
+            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
+
     txts = []
     for line, x, label in zip(labLines, xvals, labels):
         txts.append(labelLine(line, x, label, align, drop_label, **kwargs))
-    
+
     return txts
