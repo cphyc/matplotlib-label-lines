@@ -31,8 +31,8 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     def ensure_float(value):
         """Make sure datetime values are properly converted to floats."""
         try:
-            # the last 3 boolean checks are for arrays with datetime64 and with a timezone
-            # see these SO posts:
+            # the last 3 boolean checks are for arrays with datetime64 and with
+            # a timezone, see these SO posts:
             # https://stackoverflow.com/q/60714568/4549682
             # https://stackoverflow.com/q/23063362/4549682
             # somewhere, the datetime64 with timezone is getting converted to 'O' dtype
