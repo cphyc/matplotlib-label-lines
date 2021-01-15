@@ -113,7 +113,13 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
 
 
 def labelLines(
-    lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, yoffset=0, **kwargs
+    lines,
+    align=True,
+    xvals=None,
+    drop_label=False,
+    shrink_factor=0.05,
+    yoffsets=0,
+    **kwargs,
 ):
     """Label all lines with their respective legends.
 
