@@ -8,7 +8,7 @@ from matplotlib.dates import DateConverter, date2num, num2date
 
 
 # Label line with line2D label data
-def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
+def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kwargs):
     """Label a single matplotlib line at position x
 
     Parameters
@@ -22,6 +22,8 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
     drop_label : bool, optional
        If True, the label is consumed by the function so that subsequent
        calls to e.g. legend do not use it anymore.
+    yoffset : double, optional
+        Space to add to label's y position
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
@@ -60,7 +62,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
         fraction = 0.5
     else:
         fraction = (x_to_float(x) - xfa) / (xfb - xfa)
-    y = ya + (yb - ya) * fraction
+    y = ya + (yb - ya) * fraction + yoffset
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
         warnings.warn(
@@ -111,7 +113,13 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
 
 
 def labelLines(
-    lines, align=True, xvals=None, drop_label=False, shrink_factor=0.05, **kwargs
+    lines,
+    align=True,
+    xvals=None,
+    drop_label=False,
+    shrink_factor=0.05,
+    yoffsets=0,
+    **kwargs,
 ):
     """Label all lines with their respective legends.
 
@@ -130,6 +138,9 @@ def labelLines(
        calls to e.g. legend do not use it anymore.
     shrink_factor : double, optional
        Relative distance from the edges to place closest labels. Defaults to 0.05.
+    yoffsets : number or list, optional.
+        Distance relative to the line when positioning the labels. If given a number,
+        the same value is used for all lines.
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
@@ -170,7 +181,11 @@ def labelLines(
             xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
 
     txts = []
-    for line, x, label in zip(labLines, xvals, labels):
-        txts.append(labelLine(line, x, label, align, drop_label, **kwargs))
+    try:
+        yoffsets = [float(yoffsets)] * len(labLines)
+    except TypeError:
+        pass
+    for line, x, yoffset, label in zip(labLines, xvals, yoffsets, labels):
+        txts.append(labelLine(line, x, label, align, drop_label, yoffset, **kwargs))
 
     return txts

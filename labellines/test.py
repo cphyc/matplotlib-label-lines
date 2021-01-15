@@ -8,7 +8,7 @@ from matplotlib.dates import UTC, DateFormatter, DayLocator
 from matplotlib.testing import setup
 from numpy.testing import assert_raises
 
-from labellines import labelLine, labelLines
+from .core import labelLine, labelLines
 
 
 @pytest.fixture()
@@ -224,3 +224,17 @@ def test_negative_spacing(setupMpl):
     # Should not throw an error
     labelLine(line, 0.2, label="Test")
     return plt.gcf()
+
+
+def test_yoffset(setupMpl):
+    x = np.linspace(0, 1)
+
+    for yoffset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
+        plt.clf()
+        ax = plt.gca()
+        ax.plot(x, np.sin(x) * 10, label=r"$\sin x$")
+        ax.plot(x, np.cos(x) * 10, label=r"$\cos x$")
+        lines = ax.get_lines()
+        labelLines(
+            lines, xvals=(0.2, 0.7), align=False, yoffsets=yoffset, bbox={"alpha": 0}
+        )
