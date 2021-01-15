@@ -32,7 +32,7 @@ def labelLine(line, x, label=None, align=True, drop_label=False, **kwargs):
 
     mask = np.isfinite(ydata)
     if mask.sum() == 0:
-        raise Exception("The line %s only contains nan!" % line)
+        raise Exception(f"The line {line} only contains nan!")
 
     # Find first segment of xdata containing x
     if len(xdata) == 2:
