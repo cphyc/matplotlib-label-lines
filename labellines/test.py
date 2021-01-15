@@ -1,129 +1,143 @@
-from labellines import labelLines, labelLine
-from datetime import datetime
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.dates import DayLocator, DateFormatter, UTC
-from numpy.testing import assert_raises
 import warnings
+from datetime import datetime
 
+import matplotlib.pyplot as plt
+import numpy as np
 import pytest
+from matplotlib.dates import UTC, DateFormatter, DayLocator
+from matplotlib.testing import setup
+from numpy.testing import assert_raises
 
-def setup_module(module):
-     plt.clf()
+from labellines import labelLine, labelLines
+
+
+@pytest.fixture()
+def setupMpl():
+    setup()
+    plt.clf()
+
 
 @pytest.mark.mpl_image_compare
-def test_linspace():
+def test_linspace(setupMpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(x, np.sin(k * x), label=r'$f(x)=\sin(%s x)$' % k)
+        plt.plot(x, np.sin(k * x), label=rf"$f(x)=\sin({k} x)$")
 
     labelLines(plt.gca().get_lines(), zorder=2.5)
-    plt.xlabel('$x$')
-    plt.ylabel('$f(x)$')
+    plt.xlabel("$x$")
+    plt.ylabel("$f(x)$")
     return plt.gcf()
 
+
 @pytest.mark.mpl_image_compare
-def test_ylogspace():
+def test_ylogspace(setupMpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(x, np.exp(k * x), label=r'$f(x)=\exp(%s x)$' % k)
+        plt.plot(x, np.exp(k * x), label=r"$f(x)=\exp(%s x)$" % k)
 
-    plt.yscale('log')
+    plt.yscale("log")
     labelLines(plt.gca().get_lines(), zorder=2.5)
-    plt.xlabel('$x$')
-    plt.ylabel('$f(x)$')
+    plt.xlabel("$x$")
+    plt.ylabel("$f(x)$")
     return plt.gcf()
 
+
 @pytest.mark.mpl_image_compare
-def test_xlogspace():
+def test_xlogspace(setupMpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(10**x, k*x, label=r'$f(x)=%s x$' % k)
+        plt.plot(10 ** x, k * x, label=r"$f(x)=%s x$" % k)
 
-    plt.xscale('log')
+    plt.xscale("log")
     labelLines(plt.gca().get_lines(), zorder=2.5)
-    plt.xlabel('$x$')
-    plt.ylabel('$f(x)$')
+    plt.xlabel("$x$")
+    plt.ylabel("$f(x)$")
     return plt.gcf()
 
+
 @pytest.mark.mpl_image_compare
-def test_xylogspace():
+def test_xylogspace(setupMpl):
     x = np.geomspace(1e-1, 1e1)
     K = np.arange(-5, 5, 2)
 
     for k in K:
-        plt.plot(x, x**k, label=r'$f(x)=x^{%s}$' % k)
+        plt.plot(x, x ** k, label=rf"$f(x)=x^{{{k}}}$")
 
-    plt.xscale('log')
-    plt.yscale('log')
+    plt.xscale("log")
+    plt.yscale("log")
     labelLines(plt.gca().get_lines(), zorder=2.5)
-    plt.xlabel('$x$')
-    plt.ylabel('$f(x)$')
+    plt.xlabel("$x$")
+    plt.ylabel("$f(x)$")
     return plt.gcf()
 
 
 @pytest.mark.mpl_image_compare
-def test_align():
-    x = np.linspace(0, 2*np.pi)
+def test_align(setupMpl):
+    x = np.linspace(0, 2 * np.pi)
     y = np.sin(x)
 
-    lines = plt.plot(x, y, label=r'$\sin(x)$')
+    lines = plt.plot(x, y, label=r"$\sin(x)$")
 
     labelLines(lines, align=False)
     return plt.gcf()
 
+
 @pytest.mark.mpl_image_compare
-def test_labels_range():
+def test_labels_range(setupMpl):
     x = np.linspace(0, 1)
 
-    plt.plot(x, np.sin(x), label=r'$\sin x$')
-    plt.plot(x, np.cos(x), label=r'$\cos x$')
+    plt.plot(x, np.sin(x), label=r"$\sin x$")
+    plt.plot(x, np.cos(x), label=r"$\cos x$")
 
-    labelLines(plt.gca().get_lines(), xvals=(0, .5))
+    labelLines(plt.gca().get_lines(), xvals=(0, 0.5))
     return plt.gcf()
 
 
 @pytest.mark.mpl_image_compare
-def test_dateaxis_naive():
+def test_dateaxis_naive(setupMpl):
     dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
 
-    plt.plot(dates, [0, 5, 3], label='apples')
-    plt.plot(dates, [3, 6, 2], label='banana')
+    plt.plot(dates, [0, 5, 3], label="apples")
+    plt.plot(dates, [3, 6, 2], label="banana")
     ax = plt.gca()
     ax.xaxis.set_major_locator(DayLocator())
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+    ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
 
     labelLines(ax.get_lines())
     return plt.gcf()
 
 
 @pytest.mark.mpl_image_compare
-def test_dateaxis_advanced():
-    dates = [datetime(2018, 11, 1, tzinfo=UTC), datetime(2018, 11, 2, tzinfo=UTC),
-             datetime(2018, 11, 5, tzinfo=UTC), datetime(2018, 11, 3, tzinfo=UTC)]
+def test_dateaxis_advanced(setupMpl):
+    dates = [
+        datetime(2018, 11, 1, tzinfo=UTC),
+        datetime(2018, 11, 2, tzinfo=UTC),
+        datetime(2018, 11, 5, tzinfo=UTC),
+        datetime(2018, 11, 3, tzinfo=UTC),
+    ]
 
-    plt.plot(dates, [0, 5, 3, 0], label='apples')
-    plt.plot(dates, [3, 6, 2, 1], label='banana')
+    plt.plot(dates, [0, 5, 3, 0], label="apples")
+    plt.plot(dates, [3, 6, 2, 1], label="banana")
     ax = plt.gca()
     ax.xaxis.set_major_locator(DayLocator())
-    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+    ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
 
     labelLines(ax.get_lines())
     return plt.gcf()
 
 
 @pytest.mark.mpl_image_compare
-def test_polar():
+def test_polar(setupMpl):
     t = np.linspace(0, 2 * np.pi, num=128)
-    plt.plot(np.cos(t), np.sin(t), label='$1/1$')
-    plt.plot(np.cos(t), np.sin(2 * t), label='$1/2$')
-    plt.plot(np.cos(3 * t), np.sin(t), label='$3/1$')
+    plt.plot(np.cos(t), np.sin(t), label="$1/1$")
+    plt.plot(np.cos(t), np.sin(2 * t), label="$1/2$")
+    plt.plot(np.cos(3 * t), np.sin(t), label="$3/1$")
     ax = plt.gca()
 
     labelLines(ax.get_lines())
@@ -131,26 +145,27 @@ def test_polar():
 
 
 @pytest.mark.mpl_image_compare
-def test_non_uniform_and_negative_spacing():
+def test_non_uniform_and_negative_spacing(setupMpl):
     x = [1, -2, -3, 2, -4, -3]
-    plt.plot(x, [1, 2, 3, 4, 2, 1], '.-', label='apples')
-    plt.plot(x, [6, 5, 4, 2, 5, 5], 'o-', label='banana')
+    plt.plot(x, [1, 2, 3, 4, 2, 1], ".-", label="apples")
+    plt.plot(x, [6, 5, 4, 2, 5, 5], "o-", label="banana")
     ax = plt.gca()
 
     labelLines(ax.get_lines())
     return plt.gcf()
 
+
 @pytest.mark.mpl_image_compare
-def test_errorbar():
+def test_errorbar(setupMpl):
     x = np.linspace(0, 1, 20)
 
-    y = x**0.5
+    y = x ** 0.5
     dy = x
-    plt.errorbar(x, y, yerr=dy, label=r'$\sqrt{x}\pm x$')
+    plt.errorbar(x, y, yerr=dy, label=r"$\sqrt{x}\pm x$")
 
-    y = x**3
+    y = x ** 3
     dy = x
-    plt.errorbar(x, y, yerr=dy, label=r'$x^3\pm x$')
+    plt.errorbar(x, y, yerr=dy, label=r"$x^3\pm x$")
 
     ax = plt.gca()
     labelLines(ax.get_lines())
@@ -161,7 +176,7 @@ def test_nan_warning():
     x = np.array([0, 1, 2, 3])
     y = np.array([np.nan, np.nan, 0, 1])
 
-    line = plt.plot(x, y, label='test')[0]
+    line = plt.plot(x, y, label="test")[0]
 
     with warnings.catch_warnings(record=True) as w:
         labelLine(line, 0.5)
@@ -172,17 +187,20 @@ def test_nan_warning():
         labelLine(line, 2.5)
         assert len(w) == 0
 
+
 def test_nan_failure():
     x = np.array([0, 1])
     y = np.array([np.nan, np.nan])
 
-    line = plt.plot(x, y, label='test')[0]
+    line = plt.plot(x, y, label="test")[0]
     with assert_raises(Exception):
         labelLine(line, 0.5)
 
-def test_label_range():
+
+@pytest.mark.mpl_image_compare
+def test_label_range(setupMpl):
     x = np.linspace(0, 1)
-    line = plt.plot(x, x**2)[0]
+    line = plt.plot(x, x ** 2)[0]
 
     # This should fail
     with assert_raises(Exception):
@@ -193,11 +211,16 @@ def test_label_range():
     # This should work
     labelLine(line, 0.5)
 
-def test_negative_spacing():
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_negative_spacing(setupMpl):
     x = np.linspace(1, -1)
-    y = x**2
+    y = x ** 2
 
     line = plt.plot(x, y)[0]
 
     # Should not throw an error
-    labelLine(line, 0.2, label='Test')
+    labelLine(line, 0.2, label="Test")
+    return plt.gcf()
