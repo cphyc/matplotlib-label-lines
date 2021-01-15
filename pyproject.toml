@@ -1,0 +1,47 @@
+[build-system]
+# See https://github.com/scipy/scipy/pull/10431 for the AIX issue.
+requires = [
+  "setuptools>=19.6",
+  "wheel"
+]
+
+# To be kept consistent with "Code Style" section in CONTRIBUTING.rst
+[tool.black]
+line-length = 88
+target-version = ['py36', 'py37', 'py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+
+# To be kept consistent with "Import Formatting" section in CONTRIBUTING.rst
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+skip =  []
+known_third_party = [
+  "IPython",
+  "nose",
+  "numpy",
+  "sympy",
+  "matplotlib",
+  "git",
+  "yaml",
+  "dateutil",
+  "requests",
+  "coverage",
+  "pytest",
+  "pyx",
+]
+known_first_party = ["labellines"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
