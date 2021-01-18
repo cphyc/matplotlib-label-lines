@@ -1,17 +1,18 @@
--   repo: https://github.com/ambv/black
-    rev: 19.10b0
+repos:
+-   repo: https://github.com/psf/black
+    rev: 20.8b1
     hooks:
     - id: black
       language_version: python3.7
--   repo: https://github.com/timothycrosley/isort
-    rev: '5.5.3'
+-   repo: https://github.com/PyCQA/isort
+    rev: '5.7.0'
     hooks:
     -   id: isort
 -   repo: https://gitlab.com/pycqa/flake8
-    rev: '3.8.1'
+    rev: '3.8.4'
     hooks:
     -   id: flake8
 -   repo: https://github.com/ikamensh/flynt
-    rev: '0.52'
+    rev: '0.58'
     hooks:
     -   id: flynt
