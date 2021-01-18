@@ -56,8 +56,9 @@ labelLine(
     ha="left",
     va="bottom",
     align=False,
+    backgroundcolor='none'
 )
-labelLines(lines[:-1], align=False)
+labelLines(lines[:-1], yoffsets=0.01, align=False, backgroundcolor='none')
 
 # labelLines also supports log-scaled x-axes
 plt.subplot(325)
