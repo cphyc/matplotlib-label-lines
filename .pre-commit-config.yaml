@@ -13,6 +13,6 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/ikamensh/flynt
-    rev: '0.58'
+    rev: '0.59'
     hooks:
     -   id: flynt
