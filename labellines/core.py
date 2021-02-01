@@ -17,7 +17,7 @@ def labelLine(
     drop_label=False,
     yoffset=0,
     outline_color="auto",
-    outline_width=5,
+    outline_width=8,
     **kwargs,
 ):
     """Label a single matplotlib line at position x
