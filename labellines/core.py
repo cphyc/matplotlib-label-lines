@@ -2,13 +2,24 @@ import warnings
 from datetime import datetime
 from math import atan2, degrees
 
+import matplotlib.patheffects as path_effects
 import numpy as np
 from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, date2num, num2date
 
 
 # Label line with line2D label data
-def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kwargs):
+def labelLine(
+    line,
+    x,
+    label=None,
+    align=True,
+    drop_label=False,
+    yoffset=0,
+    outline_color="auto",
+    outline_width=5,
+    **kwargs,
+):
     """Label a single matplotlib line at position x
 
     Parameters
@@ -24,6 +35,11 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
        calls to e.g. legend do not use it anymore.
     yoffset : double, optional
         Space to add to label's y position
+    outline_color : None | "auto" | color
+        Colour of the outline. If set to "auto", use the background color.
+        If set to None, do not draw an outline.
+    outline_width : number
+        Width of the outline
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
@@ -118,16 +134,26 @@ def labelLine(line, x, label=None, align=True, drop_label=False, yoffset=0, **kw
     if ("verticalalignment" not in kwargs) and ("va" not in kwargs):
         kwargs["va"] = "center"
 
-    if "backgroundcolor" not in kwargs:
-        kwargs["backgroundcolor"] = ax.get_facecolor()
-
     if "clip_on" not in kwargs:
         kwargs["clip_on"] = True
 
     if "zorder" not in kwargs:
         kwargs["zorder"] = 2.5
 
-    ax.text(x, y, label, rotation=rotation, **kwargs)
+    if outline_color == "auto":
+        outline_color = ax.get_facecolor()
+
+    txt = ax.text(x, y, label, rotation=rotation, **kwargs)
+
+    if outline_color is None:
+        effects = [path_effects.Normal()]
+    else:
+        effects = [
+            path_effects.Stroke(linewidth=outline_width, foreground=outline_color),
+            path_effects.Normal(),
+        ]
+
+    txt.set_path_effects(effects)
 
 
 def labelLines(
@@ -137,6 +163,8 @@ def labelLines(
     drop_label=False,
     shrink_factor=0.05,
     yoffsets=0,
+    outline_color="auto",
+    outline_width=5,
     **kwargs,
 ):
     """Label all lines with their respective legends.
@@ -159,6 +187,11 @@ def labelLines(
     yoffsets : number or list, optional.
         Distance relative to the line when positioning the labels. If given a number,
         the same value is used for all lines.
+    outline_color : None | "auto" | color
+        Colour of the outline. If set to "auto", use the background color.
+        If set to None, do not draw an outline.
+    outline_width : number
+        Width of the outline
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
