@@ -277,7 +277,9 @@ def test_outline(setupMpl):
     plt.xlim(-2, 2)
 
     for dy, xlabel, w in zip(
-        np.linspace(-1, 1, 5), np.linspace(-1.5, 1.5, 5), np.linspace(0, 16, 5),
+        np.linspace(-1, 1, 5),
+        np.linspace(-1.5, 1.5, 5),
+        np.linspace(0, 16, 5),
     ):
         y = x ** 2 + dy
         (line,) = plt.plot(x, y, label=f"width={w}")
