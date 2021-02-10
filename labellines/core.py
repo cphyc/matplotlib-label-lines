@@ -17,7 +17,7 @@ def labelLine(
     align=True,
     drop_label=False,
     yoffset=0,
-    yoffset_logspace = False,
+    yoffset_logspace=False,
     outline_color="auto",
     outline_width=8,
     **kwargs,
@@ -83,7 +83,7 @@ def labelLine(
 
     if yoffset_logspace:
         y = ya + (yb - ya) * fraction
-        y = 10**(np.log10(y) + yoffset)
+        y = 10 ** (np.log10(y) + yoffset)
     else:
         y = ya + (yb - ya) * fraction + yoffset
 
