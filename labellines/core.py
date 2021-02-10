@@ -17,6 +17,7 @@ def labelLine(
     align=True,
     drop_label=False,
     yoffset=0,
+    yoffset_logspace = False,
     outline_color="auto",
     outline_width=8,
     **kwargs,
@@ -36,6 +37,9 @@ def labelLine(
        calls to e.g. legend do not use it anymore.
     yoffset : double, optional
         Space to add to label's y position
+    yoffset_logspace : bool, optional
+        If True, then yoffset will be added to the label's y position in
+        log10 space
     outline_color : None | "auto" | color
         Colour of the outline. If set to "auto", use the background color.
         If set to None, do not draw an outline.
@@ -76,7 +80,12 @@ def labelLine(
         fraction = 0.5
     else:
         fraction = (ensure_float(x) - xfa) / (xfb - xfa)
-    y = ya + (yb - ya) * fraction + yoffset
+
+    if yoffset_logspace:
+        y = ya + (yb - ya) * fraction
+        y = 10**(np.log10(y) + yoffset)
+    else:
+        y = ya + (yb - ya) * fraction + yoffset
 
     if not (np.isfinite(ya) and np.isfinite(yb)):
         warnings.warn(
