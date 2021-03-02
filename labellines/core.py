@@ -237,6 +237,18 @@ def labelLines(
     except TypeError:
         pass
     for line, x, yoffset, label in zip(labLines, xvals, yoffsets, labels):
-        txts.append(labelLine(line, x, label, align, drop_label, yoffset, **kwargs))
+        txts.append(
+            labelLine(
+                line,
+                x,
+                label=label,
+                align=align,
+                drop_label=drop_label,
+                yoffset=yoffset,
+                outline_color=outline_color,
+                outline_width=outline_width,
+                **kwargs,
+            )
+        )
 
     return txts
