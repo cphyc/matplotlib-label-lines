@@ -1,5 +1,5 @@
 # matplotlib-label-lines
-[![Build Status](https://travis-ci.org/cphyc/matplotlib-label-lines.svg?branch=master)](https://travis-ci.org/cphyc/matplotlib-label-lines)
+[![Build status](https://github.com/cphyc/matplotlib-label-lines/actions/workflows/pytest.yml/badge.svg)](https://github.com/cphyc/matplotlib-label-lines/actions/workflows/pytest.yml)
 [![codecov](https://codecov.io/gh/cphyc/matplotlib-label-lines/branch/master/graph/badge.svg)](https://codecov.io/gh/cphyc/matplotlib-label-lines)
 
 Easily label line(s) using matplotlib.
