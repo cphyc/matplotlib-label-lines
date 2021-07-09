@@ -1,6 +1,0 @@
-flake8==3.8.3
-flake8-black==0.2.1
-flake8-bugbear==20.11.1
-pytest~=6.1.1
-pytest-cov==2.10.1
-pytest-mpl==0.12
