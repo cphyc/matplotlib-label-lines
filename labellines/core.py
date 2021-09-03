@@ -154,6 +154,7 @@ def labelLine(
         ]
 
     txt.set_path_effects(effects)
+    return txt
 
 
 def labelLines(
