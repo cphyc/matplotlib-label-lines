@@ -286,3 +286,16 @@ def test_outline(setupMpl):
         labelLine(line, xlabel, outline_width=w, outline_color="gray")
 
     return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_auto_layout(setupMpl):
+    X = [[1, 2], [0, 1]]
+    Y = [[0, 1], [0, 1]]
+
+    lines = []
+    for i, (x, y) in enumerate(zip(X, Y)):
+        lines.extend(plt.plot(x, y, label=f"i={i}"))
+
+    labelLines(lines)
+    return plt.gcf()

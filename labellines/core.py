@@ -1,11 +1,12 @@
 import warnings
-from datetime import datetime
 from math import atan2, degrees
 
 import matplotlib.patheffects as path_effects
 import numpy as np
 from matplotlib.container import ErrorbarContainer
-from matplotlib.dates import DateConverter, date2num, num2date
+from matplotlib.dates import DateConverter, num2date
+
+from .utils import ensure_float, maximum_bipartite_matching
 
 
 # Label line with line2D label data
@@ -44,27 +45,6 @@ def labelLine(
        Optional arguments passed to ax.text
     """
 
-    def ensure_float(value):
-        """Make sure datetime values are properly converted to floats."""
-        try:
-            # the last 3 boolean checks are for arrays with datetime64 and with
-            # a timezone, see these SO posts:
-            # https://stackoverflow.com/q/60714568/4549682
-            # https://stackoverflow.com/q/23063362/4549682
-            # somewhere, the datetime64 with timezone is getting converted to 'O' dtype
-            if (
-                isinstance(value, datetime)
-                or isinstance(value, np.datetime64)
-                or np.issubdtype(value.dtype, np.datetime64)
-                or str(value.dtype).startswith("datetime64")
-                or value.dtype == "O"
-            ):
-                return date2num(value)
-            else:  # another numpy dtype like float64
-                return value
-        except AttributeError:  # possibly int or other float/int dtype
-            return value
-
     ax = line.axes
     xdata = ensure_float(line.get_xdata())
     ydata = line.get_ydata()
@@ -74,7 +54,7 @@ def labelLine(
         raise Exception(f"The line {line} only contains nan!")
 
     # Find first segment of xdata containing x
-    if len(xdata) == 2:
+    if isinstance(xdata, tuple) and len(xdata) == 2:
         i = 0
         xa = min(xdata)
         xb = max(xdata)
@@ -198,7 +178,6 @@ def labelLines(
     """
     ax = lines[0].axes
 
-    labLines, labels = [], []
     handles, allLabels = ax.get_legend_handles_labels()
 
     all_lines = []
@@ -208,33 +187,66 @@ def labelLines(
         else:
             all_lines.append(h)
 
-    # Take only the lines which have labels other than the default ones
-    for line in lines:
-        if line in all_lines:
-            label = allLabels[all_lines.index(line)]
-            labLines.append(line)
-            labels.append(label)
-
+    # In case no x location was provided, we need to use some heuristics
+    # to generate them.
     if xvals is None:
-        xvals = ax.get_xlim()  # set axis limits as annotation limits, xvals now a tuple
+        xvals = ax.get_xlim()
         xvals_rng = xvals[1] - xvals[0]
         shrinkage = xvals_rng * shrink_factor
         xvals = (xvals[0] + shrinkage, xvals[1] - shrinkage)
-    if type(xvals) == tuple:
+
+    if isinstance(xvals, tuple) and len(xvals) == 2:
         xmin, xmax = xvals
         xscale = ax.get_xscale()
         if xscale == "log":
-            xvals = np.logspace(np.log10(xmin), np.log10(xmax), len(labLines) + 2)[1:-1]
+            xvals = np.logspace(np.log10(xmin), np.log10(xmax), len(all_lines) + 2)[
+                1:-1
+            ]
         else:
-            xvals = np.linspace(xmin, xmax, len(labLines) + 2)[1:-1]
+            xvals = np.linspace(xmin, xmax, len(all_lines) + 2)[1:-1]
 
-        if isinstance(ax.xaxis.converter, DateConverter):
-            # Convert float values back to datetime in case of datetime axis
-            xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
+        # Build matrix line -> xvalue
+        ok_matrix = np.zeros((len(all_lines), len(all_lines)), dtype=bool)
+
+        for i, line in enumerate(all_lines):
+            xdata = ensure_float(line.get_xdata())
+            minx, maxx = min(xdata), max(xdata)
+            for j, xv in enumerate(xvals):
+                ok_matrix[i, j] = minx < xv < maxx
+
+        # If some xvals do not fall in their corresponding line,
+        # find a better matching using maximum bipartite matching.
+        if not np.all(np.diag(ok_matrix)):
+            order = maximum_bipartite_matching(ok_matrix)
+
+            # The maximum match may miss a few points, let's add them back
+            imax = order.max()
+            order[order < 0] = np.arange(imax + 1, len(order))
+
+            # Now reorder the xvalues
+            old_xvals = xvals.copy()
+            xvals[order] = old_xvals
+
+    labLines, labels = [], []
+    # Take only the lines which have labels other than the default ones
+    for i, (line, xv) in enumerate(zip(all_lines, xvals)):
+        label = allLabels[all_lines.index(line)]
+        labLines.append(line)
+        labels.append(label)
+
+        # Move xlabel if it is outside valid range
+        xdata = ensure_float(line.get_xdata())
+        if not (min(xdata) < xv < max(xdata)):
+            new_xv = min(xdata) + (max(xdata) - min(xdata)) * 0.9
+            xvals[i] = new_xv
+
+    # Convert float values back to datetime in case of datetime axis
+    if isinstance(ax.xaxis.converter, DateConverter):
+        xvals = [num2date(x).replace(tzinfo=ax.xaxis.get_units()) for x in xvals]
 
     txts = []
     try:
-        yoffsets = [float(yoffsets)] * len(labLines)
+        yoffsets = [float(yoffsets)] * len(all_lines)
     except TypeError:
         pass
     for line, x, yoffset, label in zip(labLines, xvals, yoffsets, labels):
