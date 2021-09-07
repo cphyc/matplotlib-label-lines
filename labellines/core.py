@@ -54,7 +54,7 @@ def labelLine(
         raise Exception(f"The line {line} only contains nan!")
 
     # Find first segment of xdata containing x
-    if len(xdata) == 2:
+    if isinstance(xdata, tuple) and len(xdata) == 2:
         i = 0
         xa = min(xdata)
         xb = max(xdata)
