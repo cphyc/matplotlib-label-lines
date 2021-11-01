@@ -1,6 +1,6 @@
 repos:
 -   repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v1.18.0
+    rev: v1.19.0
     hooks:
     -   id: setup-cfg-fmt
 -   repo: https://github.com/pre-commit/pre-commit-hooks
@@ -16,7 +16,7 @@ repos:
     - id: pyupgrade
       args: [--py36-plus]
 -   repo: https://github.com/psf/black
-    rev: 21.9b0
+    rev: 21.10b0
     hooks:
     - id: black
       language_version: python3
