@@ -299,3 +299,27 @@ def test_auto_layout(setupMpl):
 
     labelLines(lines)
     return plt.gcf()
+
+
+def test_warning_out_of_range():
+    X = [0, 1]
+    Y = [0, 1]
+
+    lines = plt.plot(X, Y, label="test")
+    with pytest.warns(
+        UserWarning,
+        match=(
+            "The value at position 0 in `xvals` is outside the range of its "
+            "associated line"
+        ),
+    ):
+        labelLines(lines, xvals=[-1])
+
+    with pytest.warns(
+        UserWarning,
+        match=(
+            "The value at position 0 in `xvals` is outside the range of its "
+            "associated line"
+        ),
+    ):
+        labelLines(lines, xvals=[2])
