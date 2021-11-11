@@ -45,3 +45,8 @@ known_third_party = [
 ]
 known_first_party = ["labellines"]
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error",
+]
