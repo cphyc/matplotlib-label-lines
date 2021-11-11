@@ -249,6 +249,15 @@ def labelLines(
         # Move xlabel if it is outside valid range
         xdata = ensure_float(line.get_xdata())
         if not (min(xdata) <= xv <= max(xdata)):
+            warnings.warn(
+                (
+                    "The value at position %s in `xvals` is outside the range of its "
+                    "associated line (xmin=%s, xmax=%s, xval=%s). Clipping it "
+                    "into the allowed range."
+                )
+                % (i, min(xdata), max(xdata), xv),
+                UserWarning,
+            )
             new_xv = min(xdata) + (max(xdata) - min(xdata)) * 0.9
             xvals[i] = new_xv
 
