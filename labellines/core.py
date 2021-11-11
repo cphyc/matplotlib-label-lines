@@ -245,7 +245,7 @@ def labelLines(
 
         # Move xlabel if it is outside valid range
         xdata = ensure_float(line.get_xdata())
-        if not (min(xdata) < xv < max(xdata)):
+        if not (min(xdata) <= xv <= max(xdata)):
             new_xv = min(xdata) + (max(xdata) - min(xdata)) * 0.9
             xvals[i] = new_xv
 
