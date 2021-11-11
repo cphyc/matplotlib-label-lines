@@ -5,6 +5,7 @@ import matplotlib.patheffects as path_effects
 import numpy as np
 from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, num2date
+from more_itertools import always_iterable
 
 from .utils import ensure_float, maximum_bipartite_matching
 
@@ -235,6 +236,8 @@ def labelLines(
             # Now reorder the xvalues
             old_xvals = xvals.copy()
             xvals[order] = old_xvals
+    else:
+        xvals = list(always_iterable(xvals))  # force the creation of a copy
 
     labLines, labels = [], []
     # Take only the lines which have labels other than the default ones
