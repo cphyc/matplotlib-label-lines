@@ -1,5 +1,4 @@
 import warnings
-from math import atan2, degrees
 
 import matplotlib.patheffects as path_effects
 import numpy as np
@@ -7,6 +6,7 @@ from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, num2date
 from more_itertools import always_iterable
 
+from .line_label import LineLabel
 from .utils import ensure_float, maximum_bipartite_matching
 
 
@@ -50,90 +50,34 @@ def labelLine(
        Optional arguments passed to ax.text
     """
 
-    ax = line.axes
-    xdata = ensure_float(line.get_xdata())
-    ydata = line.get_ydata()
-
-    mask = np.isfinite(ydata)
-    if mask.sum() == 0:
-        raise Exception(f"The line {line} only contains nan!")
-
-    # Find first segment of xdata containing x
-    if isinstance(xdata, tuple) and len(xdata) == 2:
-        i = 0
-        xa = min(xdata)
-        xb = max(xdata)
-    else:
-        for imatch, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-            if min(xa, xb) <= ensure_float(x) <= max(xa, xb):
-                i = imatch
-                break
-        else:
-            raise Exception("x label location is outside data range!")
-
-    xfa = ensure_float(xa)
-    xfb = ensure_float(xb)
-    ya = ydata[i]
-    yb = ydata[i + 1]
-
-    # Handle vertical case
-    if xfb == xfa:
-        fraction = 0.5
-    else:
-        fraction = (ensure_float(x) - xfa) / (xfb - xfa)
-
-    if yoffset_logspace:
-        y = ya + (yb - ya) * fraction
-        y *= 10**yoffset
-    else:
-        y = ya + (yb - ya) * fraction + yoffset
-
-    if not (np.isfinite(ya) and np.isfinite(yb)):
-        warnings.warn(
-            (
-                "%s could not be annotated due to `nans` values. "
-                "Consider using another location via the `x` argument."
-            )
-            % line,
-            UserWarning,
+    try:
+        txt = LineLabel(
+            line,
+            x,
+            label=label,
+            align=align,
+            yoffset=yoffset,
+            yoffset_logspace=yoffset_logspace,
+            **kwargs,
         )
-        return
-
-    if not label:
-        label = line.get_label()
+    except ValueError as err:
+        if "does not have a well defined value" in str(err):
+            warnings.warn(
+                (
+                    "%s could not be annotated due to `nans` values. "
+                    "Consider using another location via the `x` argument."
+                )
+                % line,
+                UserWarning,
+            )
+            return
+        raise err
 
     if drop_label:
         line.set_label(None)
 
-    if align:
-        # Compute the slope and label rotation
-        screen_dx, screen_dy = ax.transData.transform(
-            (xfa, ya)
-        ) - ax.transData.transform((xfb, yb))
-        rotation = (degrees(atan2(screen_dy, screen_dx)) + 90) % 180 - 90
-    else:
-        rotation = 0
-
-    # Set a bunch of keyword arguments
-    if "color" not in kwargs:
-        kwargs["color"] = line.get_color()
-
-    if ("horizontalalignment" not in kwargs) and ("ha" not in kwargs):
-        kwargs["ha"] = "center"
-
-    if ("verticalalignment" not in kwargs) and ("va" not in kwargs):
-        kwargs["va"] = "center"
-
-    if "clip_on" not in kwargs:
-        kwargs["clip_on"] = True
-
-    if "zorder" not in kwargs:
-        kwargs["zorder"] = 2.5
-
     if outline_color == "auto":
-        outline_color = ax.get_facecolor()
-
-    txt = ax.text(x, y, label, rotation=rotation, **kwargs)
+        outline_color = line.axes.get_facecolor()
 
     if outline_color is None:
         effects = [path_effects.Normal()]
