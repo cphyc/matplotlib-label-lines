@@ -200,7 +200,7 @@ def test_nan_failure():
 @pytest.mark.mpl_image_compare
 def test_label_range(setupMpl):
     x = np.linspace(0, 1)
-    line = plt.plot(x, x**2)[0]
+    line = plt.plot(x, x**2, label="lorem ipsum")[0]
 
     # This should fail
     with assert_raises(Exception):
