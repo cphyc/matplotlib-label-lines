@@ -2,17 +2,21 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import matplotlib.patheffects as patheffects
 import numpy as np
 from matplotlib.text import Text
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from typing import Union
+    from typing import Any, Union
 
     from matplotlib.axes import Axes
     from matplotlib.lines import Line2D
 
     Position = Union[float, datetime, np.datetime64]
+    ColorLike = Any  # mpl has no type annotations so this is just a crutch
+    # Once support for python <3.8 is dropped this should be Literal["auto"]
+    AutoLiteral = str
 
 
 class LineLabel(Text):
@@ -53,6 +57,8 @@ class LineLabel(Text):
         align: bool = True,
         yoffset: float = 0,
         yoffset_logspace: bool = False,
+        outline_color: AutoLiteral | ColorLike | None = "auto",
+        outline_width: float = 8,
         **kwargs,
     ) -> None:
         """
@@ -73,6 +79,11 @@ class LineLabel(Text):
         yoffset_logspace : bool, optional
             If true yoffset is applied exponentially to appear linear on a log-axis,
             by default False.
+        outline_color : None | "auto" | Colorlike
+            Colour of the outline. If set to "auto", use the background color.
+            If set to None, do not draw an outline, by default "auto".
+        outline_width : float
+            Width of the outline, by default 8.
         """
         self._line = line
         self._target_x = x
@@ -94,7 +105,7 @@ class LineLabel(Text):
         if "va" not in kwargs:
             kwargs.setdefault("verticalalignment", "center")
 
-        # Initialize Text Artist, activate clipping if needed and place on axes
+        # Initialize Text Artist
         super().__init__(
             *self._label_pos,
             label,
@@ -102,6 +113,23 @@ class LineLabel(Text):
             rotation_mode="anchor",
             **kwargs,
         )
+
+        # Apply outline effect
+        if outline_color is not None:
+
+            if outline_color == "auto":
+                outline_color = line.axes.get_facecolor()
+
+            self.set_path_effects(
+                [
+                    patheffects.Stroke(
+                        linewidth=outline_width, foreground=outline_color
+                    ),
+                    patheffects.Normal(),
+                ]
+            )
+
+        # activate clipping if needed and place on axes
         if kwargs["clip_on"]:
             self.set_clip_path(self._ax.patch)
         self._ax._add_text(self)

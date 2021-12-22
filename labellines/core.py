@@ -1,6 +1,5 @@
 import warnings
 
-import matplotlib.patheffects as path_effects
 import numpy as np
 from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, num2date
@@ -58,6 +57,8 @@ def labelLine(
             align=align,
             yoffset=yoffset,
             yoffset_logspace=yoffset_logspace,
+            outline_color=outline_color,
+            outline_width=outline_width,
             **kwargs,
         )
     except ValueError as err:
@@ -76,18 +77,6 @@ def labelLine(
     if drop_label:
         line.set_label(None)
 
-    if outline_color == "auto":
-        outline_color = line.axes.get_facecolor()
-
-    if outline_color is None:
-        effects = [path_effects.Normal()]
-    else:
-        effects = [
-            path_effects.Stroke(linewidth=outline_width, foreground=outline_color),
-            path_effects.Normal(),
-        ]
-
-    txt.set_path_effects(effects)
     return txt
 
 
