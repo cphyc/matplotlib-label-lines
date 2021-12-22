@@ -89,6 +89,16 @@ def test_align(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
+def test_vertical(setupMpl):
+    x = 0.5
+
+    line = plt.axvline(x, label=r"axvline")
+
+    labelLine(line, x)
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
 def test_labels_range(setupMpl):
     x = np.linspace(0, 1)
 
