@@ -129,10 +129,13 @@ class LineLabel(Text):
             raise ValueError("x label location is outside data range!")
 
         # Interpolate y position of label, (interp needs sorted data)
-        dx = np.array((xa, xb))
-        dy = np.array((ya, yb))
-        srt = np.argsort(dx)
-        y = np.interp(x, dx[srt], dy[srt])
+        if xa != xb:
+            dx = np.array((xa, xb))
+            dy = np.array((ya, yb))
+            srt = np.argsort(dx)
+            y = np.interp(x, dx[srt], dy[srt])
+        else:  # Vertical case
+            y = (ya + yb) / 2
 
         # Apply y offset
         if self._yoffset_logspace:
