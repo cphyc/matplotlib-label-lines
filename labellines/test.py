@@ -89,6 +89,21 @@ def test_align(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
+def test_rotation_correction(setupMpl):
+    # Fix axes limits and plot line
+    fig, ax = plt.subplots()
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    lines = plt.plot((0, 1), (0, 2), label="rescaled")
+
+    # Now label the line and THEN rescale the axes, to force label rotation
+    labelLine(lines[0], 0.5)
+    ax.set_ylim(0, 2)
+
+    return fig
+
+
+@pytest.mark.mpl_image_compare
 def test_vertical(setupMpl):
     x = 0.5
 
