@@ -2,7 +2,8 @@
 # See https://github.com/scipy/scipy/pull/10431 for the AIX issue.
 requires = [
   "setuptools>=19.6",
-  "wheel"
+  "wheel",
+  "oldest-supported-numpy"
 ]
 
 # To be kept consistent with "Code Style" section in CONTRIBUTING.rst
