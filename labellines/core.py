@@ -230,8 +230,7 @@ def labelLines(
             order = maximum_bipartite_matching(ok_matrix)
 
             # The maximum match may miss a few points, let's add them back
-            imax = order.max()
-            order[order < 0] = np.arange(imax + 1, len(order))
+            order[order < 0] = np.setdiff1d(np.arange(len(order)), order[order >= 0])
 
             # Now reorder the xvalues
             old_xvals = xvals.copy()
