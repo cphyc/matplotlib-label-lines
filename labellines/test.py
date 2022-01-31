@@ -52,7 +52,7 @@ def test_xlogspace(setupMpl):
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(10 ** x, k * x, label=r"$f(x)=%s x$" % k)
+        plt.plot(10**x, k * x, label=r"$f(x)=%s x$" % k)
 
     plt.xscale("log")
     labelLines(plt.gca().get_lines(), zorder=2.5)
@@ -67,7 +67,7 @@ def test_xylogspace(setupMpl):
     K = np.arange(-5, 5, 2)
 
     for k in K:
-        plt.plot(x, x ** k, label=rf"$f(x)=x^{{{k}}}$")
+        plt.plot(x, x**k, label=rf"$f(x)=x^{{{k}}}$")
 
     plt.xscale("log")
     plt.yscale("log")
@@ -159,11 +159,11 @@ def test_non_uniform_and_negative_spacing(setupMpl):
 def test_errorbar(setupMpl):
     x = np.linspace(0, 1, 20)
 
-    y = x ** 0.5
+    y = x**0.5
     dy = x
     plt.errorbar(x, y, yerr=dy, label=r"$\sqrt{x}\pm x$")
 
-    y = x ** 3
+    y = x**3
     dy = x
     plt.errorbar(x, y, yerr=dy, label=r"$x^3\pm x$")
 
@@ -200,7 +200,7 @@ def test_nan_failure():
 @pytest.mark.mpl_image_compare
 def test_label_range(setupMpl):
     x = np.linspace(0, 1)
-    line = plt.plot(x, x ** 2)[0]
+    line = plt.plot(x, x**2)[0]
 
     # This should fail
     with assert_raises(Exception):
@@ -217,7 +217,7 @@ def test_label_range(setupMpl):
 @pytest.mark.mpl_image_compare
 def test_negative_spacing(setupMpl):
     x = np.linspace(1, -1)
-    y = x ** 2
+    y = x**2
 
     line = plt.plot(x, y)[0]
 
@@ -281,7 +281,7 @@ def test_outline(setupMpl):
         np.linspace(-1.5, 1.5, 5),
         np.linspace(0, 16, 5),
     ):
-        y = x ** 2 + dy
+        y = x**2 + dy
         (line,) = plt.plot(x, y, label=f"width={w}")
         labelLine(line, xlabel, outline_width=w, outline_color="gray")
 
