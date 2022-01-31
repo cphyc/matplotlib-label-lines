@@ -84,7 +84,7 @@ def labelLine(
 
     if yoffset_logspace:
         y = ya + (yb - ya) * fraction
-        y *= 10 ** yoffset
+        y *= 10**yoffset
     else:
         y = ya + (yb - ya) * fraction + yoffset
 
