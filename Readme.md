@@ -26,30 +26,34 @@ X = np.linspace(0, 1, 500)
 A = [1, 2, 5, 10, 20]
 funcs = [np.arctan, np.sin, loglaplace(4).pdf, chi2(5).pdf]
 
-plt.subplot(321)
+fig, axes = plt.subplots(ncols=2, nrows=3, constrained_layout=True, figsize=(8, 8))
+
+axes = axes.flatten()
+
+ax = axes[0]
 for a in A:
-    plt.plot(X, np.arctan(a * X), label=str(a))
+    ax.plot(X, np.arctan(a * X), label=str(a))
 
-labelLines(plt.gca().get_lines(), zorder=2.5)
+labelLines(ax.get_lines(), zorder=2.5)
 
-plt.subplot(322)
+ax = axes[1]
 for a in A:
-    plt.plot(X, np.sin(a * X), label=str(a))
+    ax.plot(X, np.sin(a * X), label=str(a))
 
-labelLines(plt.gca().get_lines(), align=False, fontsize=14)
+labelLines(ax.get_lines(), align=False, fontsize=14)
 
-plt.subplot(323)
+ax = axes[2]
 for a in A:
-    plt.plot(X, loglaplace(4).pdf(a * X), label=str(a))
+    ax.plot(X, loglaplace(4).pdf(a * X), label=str(a))
 
 xvals = [0.8, 0.55, 0.22, 0.104, 0.045]
-labelLines(plt.gca().get_lines(), align=False, xvals=xvals, color="k")
+labelLines(ax.get_lines(), align=False, xvals=xvals, color="k")
 
-plt.subplot(324)
+ax = axes[3]
 for a in A:
-    plt.plot(X, chi2(5).pdf(a * X), label=str(a))
+    ax.plot(X, chi2(5).pdf(a * X), label=str(a))
 
-lines = plt.gca().get_lines()
+lines = ax.get_lines()
 l1 = lines[-1]
 labelLine(
     l1,
@@ -58,24 +62,23 @@ labelLine(
     ha="left",
     va="bottom",
     align=False,
-    backgroundcolor='none'
+    backgroundcolor="none",
 )
-labelLines(lines[:-1], yoffsets=0.01, align=False, backgroundcolor='none')
+labelLines(lines[:-1], yoffsets=0.01, align=False, backgroundcolor="none")
 
 # labelLines also supports log-scaled x-axes
-plt.subplot(325)
+ax = axes[4]
 for a in A:
-    plt.semilogx(X, np.arctan(5 * a * X), label=str(a))
+    ax.semilogx(X, np.arctan(5 * a * X), label=str(a))
 
-labelLines(plt.gca().get_lines(), zorder=2.5)
+labelLines(ax.get_lines(), zorder=2.5)
 
-plt.subplot(326)
+ax = axes[5]
 for a in A:
-    plt.semilogx(X, chi2(5).pdf(a * X), label=str(a))
+    ax.semilogx(X, chi2(5).pdf(a * X), label=str(a))
 
-labelLines(plt.gca().get_lines(), xvals=(0.1, 1), zorder=2.5)
+labelLines(ax.get_lines(), xvals=(0.1, 1), zorder=2.5)
 
-plt.show()
-
+fig.show()
 ```
 ![Example](https://raw.githubusercontent.com/cphyc/matplotlib-label-lines/master/example.png)

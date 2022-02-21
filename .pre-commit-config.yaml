@@ -20,7 +20,11 @@ repos:
     hooks:
     - id: black
       language_version: python3
-      target_version: py37
+-   repo: https://github.com/asottile/blacken-docs
+    rev: v1.12.1
+    hooks:
+    - id: blacken-docs
+      additional_dependencies: [black==22.1.0]
 -   repo: https://github.com/PyCQA/isort
     rev: '5.10.1'
     hooks:
