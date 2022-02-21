@@ -21,7 +21,7 @@ def ensure_float(value):
         ):
             return date2num(value)
         else:  # another numpy dtype like float64
-            return value
+            return np.asarray(value, dtype=float)
     except AttributeError:  # possibly int or other float/int dtype
         return value
 
