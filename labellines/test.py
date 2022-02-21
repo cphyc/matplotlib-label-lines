@@ -107,7 +107,7 @@ def test_rotation_correction(setupMpl):
 def test_vertical(setupMpl):
     x = 0.5
 
-    line = plt.axvline(x, label=r"axvline")
+    line = plt.axvline(x, label="axvline")
 
     labelLine(line, x)
     return plt.gcf()
