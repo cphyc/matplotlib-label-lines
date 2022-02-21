@@ -8,12 +8,12 @@ from matplotlib.text import Text
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from typing import Any, Union
+    from typing import Any
 
     from matplotlib.axes import Axes
     from matplotlib.lines import Line2D
 
-    Position = Union[float, datetime, np.datetime64]
+    Position = float | datetime | np.datetime64
     ColorLike = Any  # mpl has no type annotations so this is just a crutch
     # Once support for python <3.8 is dropped this should be Literal["auto"]
     AutoLiteral = str
@@ -69,7 +69,7 @@ class LineLabel(Text):
             Line to be decorated.
         x : Position
             Horizontal target position for the label (in data units).
-        label : Optional[str], optional
+        label : str, optional
             Override for line label, by default None.
         align : bool, optional
             If true, the label is parallel to the line, otherwise horizontal,
@@ -167,7 +167,7 @@ class LineLabel(Text):
 
         # Apply y offset
         if self._yoffset_logspace:
-            y *= 10 ** self._yoffset
+            y *= 10**self._yoffset
         else:
             y += self._yoffset
 
@@ -199,4 +199,10 @@ class LineLabel(Text):
     def _set_rotation(self, rotation):
         pass
 
-    _rotation = property(_get_rotation, _set_rotation)
+    @property
+    def _rotation(self):
+        return self._get_rotation()
+
+    @_rotation.setter
+    def _rotation(self, rotation):
+        self._set_rotation(rotation)
