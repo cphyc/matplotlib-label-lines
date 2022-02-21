@@ -1,6 +1,6 @@
 # matplotlib-label-lines
 [![Build status](https://github.com/cphyc/matplotlib-label-lines/actions/workflows/pytest.yml/badge.svg)](https://github.com/cphyc/matplotlib-label-lines/actions/workflows/pytest.yml)
-[![Supported Python Versions](https://img.shields.io/pypi/pyversions/matplotlib-label-lines/0.4.3)](https://pypi.org/project/matplotlib-label-lines/)
+[![Supported Python Versions](https://img.shields.io/pypi/pyversions/matplotlib-label-lines/0.5.0)](https://pypi.org/project/matplotlib-label-lines/)
 [![PyPI](https://img.shields.io/pypi/v/matplotlib-label-lines)](https://pypi.org/project/matplotlib-label-lines)
 [![codecov](https://codecov.io/gh/cphyc/matplotlib-label-lines/branch/master/graph/badge.svg)](https://codecov.io/gh/cphyc/matplotlib-label-lines)
 
