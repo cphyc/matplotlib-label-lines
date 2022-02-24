@@ -1,5 +1,6 @@
 import warnings
 
+import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.container import ErrorbarContainer
 from matplotlib.dates import DateConverter, num2date
@@ -81,7 +82,7 @@ def labelLine(
 
 
 def labelLines(
-    lines,
+    lines=None,
     align=True,
     xvals=None,
     drop_label=False,
@@ -95,8 +96,8 @@ def labelLines(
 
     Parameters
     ----------
-    lines : list of matplotlib lines
-       The lines to label
+    lines : list of matplotlib lines, optional.
+       Lines to label. If empty, label all lines that have a label.
     align : boolean, optional
        If True, the label will be aligned with the slope of the line
        at the location of the label. If False, they will be horizontal.
@@ -119,16 +120,34 @@ def labelLines(
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
-    ax = lines[0].axes
+    if lines:
+        ax = lines[0].axes
+    else:
+        ax = plt.gca()
 
     handles, allLabels = ax.get_legend_handles_labels()
 
     all_lines = []
     for h in handles:
         if isinstance(h, ErrorbarContainer):
-            all_lines.append(h.lines[0])
+            line = h.lines[0]
         else:
-            all_lines.append(h)
+            line = h
+
+        if (lines is not None) and (line not in lines):
+            continue
+        all_lines.append(line)
+
+    # Check that the lines passed to the function have all a label
+    if lines is not None:
+        for line in lines:
+            if line in all_lines:
+                continue
+
+            warnings.warn(
+                "Tried to label line %s, but could not find a label for it.",
+                UserWarning,
+            )
 
     # In case no x location was provided, we need to use some heuristics
     # to generate them.
