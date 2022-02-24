@@ -184,14 +184,13 @@ def test_errorbar(setupMpl):
 
     y = x**0.5
     dy = x
-    plt.errorbar(x, y, yerr=dy, label=r"$\sqrt{x}\pm x$")
+    plt.errorbar(x, y, yerr=dy, label=r"$\sqrt{x}\pm x$")[0]
 
     y = x**3
     dy = x
-    plt.errorbar(x, y, yerr=dy, label=r"$x^3\pm x$")
+    plt.errorbar(x, y, yerr=dy, label=r"$x^3\pm x$")[0]
 
-    ax = plt.gca()
-    labelLines(ax.get_lines())
+    labelLines()
     return plt.gcf()
 
 
@@ -349,7 +348,7 @@ def test_warning_out_of_range():
 
 
 @pytest.mark.mpl_image_compare
-def test_errorbars(setupMpl):
+def test_errorbar_with_list(setupMpl):
     np.random.seed(1234)
     fig, ax = plt.subplots()
     samples = ["a", "b"]
@@ -358,10 +357,11 @@ def test_errorbars(setupMpl):
     x = list(np.arange(-4, 4.1, 0.1))
     ys = [list(np.random.rand(len(x))), list(np.random.rand(len(x)))]
 
+    lines = []
     for sample, y in zip(samples, ys):
-        ax.errorbar(x, y, yerr=0.1, label=sample)
+        lines.append(ax.errorbar(x, y, yerr=0.1, label=sample)[0])
 
-    labelLines(ax.get_lines(), align=False, xvals=pos)
+    labelLines(lines, align=False, xvals=pos)
     return fig
 
 

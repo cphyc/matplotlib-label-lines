@@ -145,7 +145,7 @@ def labelLines(
                 continue
 
             warnings.warn(
-                "Tried to label line %s, but could not find a label for it.",
+                "Tried to label line %s, but could not find a label for it." % line,
                 UserWarning,
             )
 
