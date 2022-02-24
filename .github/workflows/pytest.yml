@@ -28,4 +28,9 @@ jobs:
         python -m pip install .[test]
     - name: Test with pytest
       run: |
-        pytest --mpl
+        pytest --mpl --mpl-results-path=results
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: pytest-${{ matrix.python-version }}-results
+        path: results
