@@ -134,6 +134,7 @@ def labelLines(
         else:
             line = h
 
+        # If the user provided a list of lines to label, only label those
         if (lines is not None) and (line not in lines):
             continue
         all_lines.append(line)
