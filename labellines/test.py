@@ -348,3 +348,19 @@ def test_warning_out_of_range():
         ),
     ):
         labelLines(lines, xvals=[2])
+
+
+@pytest.mark.mpl_image_compare
+def test_errorbars(setupMpl):
+    fig, ax = plt.subplots()
+    samples = ["a", "b"]
+    pos = [-1, 1]
+
+    x = list(np.arange(-4, 4.1, 0.1))
+    ys = [list(np.random.rand(len(x))), list(np.random.rand(len(x)))]
+
+    for sample, y in zip(samples, ys):
+        ax.errorbar(x, y, yerr=0.1, label=sample)
+
+    labelLines(ax.get_lines(), align=False, xvals=pos)
+    return fig
