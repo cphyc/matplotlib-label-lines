@@ -1,4 +1,3 @@
-import warnings
 from datetime import datetime
 
 import matplotlib.pyplot as plt
@@ -6,7 +5,6 @@ import numpy as np
 import pytest
 from matplotlib.dates import UTC, DateFormatter, DayLocator
 from matplotlib.testing import setup
-from numpy.testing import assert_raises
 
 from .core import labelLine, labelLines
 
@@ -203,14 +201,14 @@ def test_nan_warning():
 
     line = plt.plot(x, y, label="test")[0]
 
-    with warnings.catch_warnings(record=True) as w:
+    warn_msg = (
+        ".* could not be annotated due to `nans` values. "
+        "Consider using another location via the `x` argument."
+    )
+    with pytest.warns(UserWarning, match=warn_msg):
         labelLine(line, 0.5)
-        assert issubclass(w[-1].category, UserWarning)
-        assert "could not be annotated" in str(w[-1].message)
 
-    with warnings.catch_warnings(record=True) as w:
-        labelLine(line, 2.5)
-        assert len(w) == 0
+    labelLine(line, 2.5)
 
 
 def test_nan_failure():
@@ -218,7 +216,7 @@ def test_nan_failure():
     y = np.array([np.nan, np.nan])
 
     line = plt.plot(x, y, label="test")[0]
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         labelLine(line, 0.5)
 
 
@@ -228,9 +226,9 @@ def test_label_range(setupMpl):
     line = plt.plot(x, x**2, label="lorem ipsum")[0]
 
     # This should fail
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         labelLine(line, -1)
-    with assert_raises(Exception):
+    with pytest.raises(Exception):
         labelLine(line, 2)
 
     # This should work
@@ -365,3 +363,44 @@ def test_errorbars(setupMpl):
 
     labelLines(ax.get_lines(), align=False, xvals=pos)
     return fig
+
+
+@pytest.fixture
+def create_plot():
+    fig, ax = plt.subplots()
+    X = [0, 1]
+    Y = [0, 1]
+
+    lines = (
+        *ax.plot(X, Y, label="label1"),
+        *ax.plot(X, Y),  # no label
+        *ax.plot(X, Y, label="label2"),
+    )
+    return fig, ax, lines
+
+
+def test_warning_line_labeling(create_plot):
+    _fig, _ax, lines = create_plot
+
+    warn_msg = "Tried to label line .*, but could not find a label for it."
+    with pytest.warns(UserWarning, match=warn_msg):
+        txts = labelLines(lines)
+    # Make sure only two lines have been labeled
+    assert len(txts) == 2
+
+    with pytest.warns(UserWarning, match=warn_msg):
+        txts = labelLines(lines[1:])
+    # Make sure only one line has been labeled
+    assert len(txts) == 1
+
+
+def test_no_warning_line_labeling(create_plot):
+    _fig, _ax, lines = create_plot
+
+    txts = labelLines(lines[0:1])
+    assert len(txts) == 1
+
+
+def test_labeling_by_axis(create_plot):
+    txts = labelLines()
+    assert len(txts) == 2
