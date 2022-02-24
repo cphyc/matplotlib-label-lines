@@ -400,6 +400,9 @@ def test_no_warning_line_labeling(create_plot):
     txts = labelLines(lines[0:1])
     assert len(txts) == 1
 
+    txts = labelLines()
+    assert len(txts) == 2
+
 
 def test_labeling_by_axis(create_plot):
     txts = labelLines()
