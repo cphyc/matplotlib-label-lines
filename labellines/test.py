@@ -352,6 +352,7 @@ def test_warning_out_of_range():
 
 @pytest.mark.mpl_image_compare
 def test_errorbars(setupMpl):
+    np.random.seed(1234)
     fig, ax = plt.subplots()
     samples = ["a", "b"]
     pos = [-1, 1]
