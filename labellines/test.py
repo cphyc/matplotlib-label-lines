@@ -72,6 +72,7 @@ def test_xylogspace(setupMpl):
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel("$x$")
     plt.ylabel("$f(x)$")
+    plt.ylim(1e-6, 1e6)
     return plt.gcf()
 
 
