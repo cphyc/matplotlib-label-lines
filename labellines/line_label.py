@@ -8,15 +8,14 @@ from matplotlib.text import Text
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from typing import Any
+    from typing import Any, Literal, Optional, Union
 
     from matplotlib.axes import Axes
     from matplotlib.lines import Line2D
 
-    Position = float | datetime | np.datetime64
+    Position = Union[float, datetime, np.datetime64]
     ColorLike = Any  # mpl has no type annotations so this is just a crutch
-    # Once support for python <3.8 is dropped this should be Literal["auto"]
-    AutoLiteral = str
+    AutoLiteral = Literal["auto"]
 
 
 class LineLabel(Text):
@@ -53,11 +52,11 @@ class LineLabel(Text):
         self,
         line: Line2D,
         x: Position,
-        label: str | None = None,
+        label: Optional[str] = None,
         align: bool = True,
         yoffset: float = 0,
         yoffset_logspace: bool = False,
-        outline_color: AutoLiteral | ColorLike | None = "auto",
+        outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
         outline_width: float = 8,
         **kwargs,
     ) -> None:
