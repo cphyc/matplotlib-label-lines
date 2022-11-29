@@ -3,7 +3,6 @@
 requires = [
   "setuptools>=19.6",
   "wheel",
-  "oldest-supported-numpy"
 ]
 
 [tool.black]
@@ -30,6 +29,9 @@ filterwarnings = [
 
 [tool.ruff]
 # Enable Pyflakes `E` and `F` codes by default.
-select = ["E", "F"]
-ignore = []
+select = ["E", "C", "F", "U", "B", "A", "YTT", "S", "N"]
+ignore = ["N802", "N806", "C901"]
 target-version = 'py37'
+
+[tool.ruff.per-file-ignores]
+"**/test*.py" = ["S101"]
