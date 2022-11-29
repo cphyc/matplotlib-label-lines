@@ -40,7 +40,7 @@ class GFG:
 
     # A DFS based recursive function that returns true if a matching for vertex
     # u is possible
-    def bpm(self, u, matchR, seen):
+    def bpm(self, u, match_r, seen):
 
         # Try every job one by one
         for v in range(self.jobs):
@@ -58,8 +58,8 @@ class GFG:
                 # above line, matchR[v] in the following recursive call will not
                 # get job 'v' again
 
-                if matchR[v] == -1 or self.bpm(matchR[v], matchR, seen):
-                    matchR[v] = u
+                if match_r[v] == -1 or self.bpm(match_r[v], match_r, seen):
+                    match_r[v] = u
                     return True
         return False
 

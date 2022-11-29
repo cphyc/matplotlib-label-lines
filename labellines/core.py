@@ -23,7 +23,8 @@ def labelLine(
     outline_width=8,
     **kwargs,
 ):
-    """Label a single matplotlib line at position x
+    """
+    Label a single matplotlib line at position x
 
     Parameters
     ----------
@@ -125,7 +126,7 @@ def labelLines(
     else:
         ax = plt.gca()
 
-    handles, allLabels = ax.get_legend_handles_labels()
+    handles, all_labels = ax.get_legend_handles_labels()
 
     all_lines = []
     for h in handles:
@@ -191,11 +192,11 @@ def labelLines(
     else:
         xvals = list(always_iterable(xvals))  # force the creation of a copy
 
-    labLines, labels = [], []
+    lab_lines, labels = [], []
     # Take only the lines which have labels other than the default ones
     for i, (line, xv) in enumerate(zip(all_lines, xvals)):
-        label = allLabels[all_lines.index(line)]
-        labLines.append(line)
+        label = all_labels[all_lines.index(line)]
+        lab_lines.append(line)
         labels.append(label)
 
         # Move xlabel if it is outside valid range
@@ -222,7 +223,7 @@ def labelLines(
         yoffsets = [float(yoffsets)] * len(all_lines)
     except TypeError:
         pass
-    for line, x, yoffset, label in zip(labLines, xvals, yoffsets, labels):
+    for line, x, yoffset, label in zip(lab_lines, xvals, yoffsets, labels):
         txts.append(
             labelLine(
                 line,

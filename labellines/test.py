@@ -10,13 +10,13 @@ from .core import labelLine, labelLines
 
 
 @pytest.fixture()
-def setupMpl():
+def setup_mpl():
     setup()
     plt.clf()
 
 
 @pytest.mark.mpl_image_compare
-def test_linspace(setupMpl):
+def test_linspace(setup_mpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -30,7 +30,7 @@ def test_linspace(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_ylogspace(setupMpl):
+def test_ylogspace(setup_mpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -45,7 +45,7 @@ def test_ylogspace(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_xlogspace(setupMpl):
+def test_xlogspace(setup_mpl):
     x = np.linspace(0, 1)
     K = [1, 2, 4]
 
@@ -60,7 +60,7 @@ def test_xlogspace(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_xylogspace(setupMpl):
+def test_xylogspace(setup_mpl):
     x = np.geomspace(1e-1, 1e1)
     K = np.arange(-5, 5, 2)
 
@@ -77,7 +77,7 @@ def test_xylogspace(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_align(setupMpl):
+def test_align(setup_mpl):
     x = np.linspace(0, 2 * np.pi)
     y = np.sin(x)
 
@@ -88,7 +88,7 @@ def test_align(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_rotation_correction(setupMpl):
+def test_rotation_correction(setup_mpl):
     # Fix axes limits and plot line
     fig, ax = plt.subplots()
     ax.set_xlim(0, 1)
@@ -103,7 +103,7 @@ def test_rotation_correction(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_vertical(setupMpl):
+def test_vertical(setup_mpl):
     x = 0.5
 
     line = plt.axvline(x, label="axvline")
@@ -113,7 +113,7 @@ def test_vertical(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_labels_range(setupMpl):
+def test_labels_range(setup_mpl):
     x = np.linspace(0, 1)
 
     plt.plot(x, np.sin(x), label=r"$\sin x$")
@@ -124,7 +124,7 @@ def test_labels_range(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_dateaxis_naive(setupMpl):
+def test_dateaxis_naive(setup_mpl):
     dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
 
     plt.plot(dates, [0, 5, 3], label="apples")
@@ -138,7 +138,7 @@ def test_dateaxis_naive(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_dateaxis_advanced(setupMpl):
+def test_dateaxis_advanced(setup_mpl):
     dates = [
         datetime(2018, 11, 1, tzinfo=UTC),
         datetime(2018, 11, 2, tzinfo=UTC),
@@ -157,7 +157,7 @@ def test_dateaxis_advanced(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_polar(setupMpl):
+def test_polar(setup_mpl):
     t = np.linspace(0, 2 * np.pi, num=128)
     plt.plot(np.cos(t), np.sin(t), label="$1/1$")
     plt.plot(np.cos(t), np.sin(2 * t), label="$1/2$")
@@ -169,7 +169,7 @@ def test_polar(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_non_uniform_and_negative_spacing(setupMpl):
+def test_non_uniform_and_negative_spacing(setup_mpl):
     x = [1, -2, -3, 2, -4, -3]
     plt.plot(x, [1, 2, 3, 4, 2, 1], ".-", label="apples")
     plt.plot(x, [6, 5, 4, 2, 5, 5], "o-", label="banana")
@@ -180,7 +180,7 @@ def test_non_uniform_and_negative_spacing(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_errorbar(setupMpl):
+def test_errorbar(setup_mpl):
     x = np.linspace(0, 1, 20)
 
     y = x**0.5
@@ -221,7 +221,7 @@ def test_nan_failure():
 
 
 @pytest.mark.mpl_image_compare
-def test_label_range(setupMpl):
+def test_label_range(setup_mpl):
     x = np.linspace(0, 1)
     line = plt.plot(x, x**2, label="lorem ipsum")[0]
 
@@ -238,7 +238,7 @@ def test_label_range(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_negative_spacing(setupMpl):
+def test_negative_spacing(setup_mpl):
     x = np.linspace(1, -1)
     y = x**2
 
@@ -250,7 +250,7 @@ def test_negative_spacing(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_label_datetime_plot(setupMpl):
+def test_label_datetime_plot(setup_mpl):
     plt.clf()
     # data from the chinook database of iTunes music sales
     x = np.array(
@@ -278,7 +278,7 @@ def test_label_datetime_plot(setupMpl):
     return plt.gcf()
 
 
-def test_yoffset(setupMpl):
+def test_yoffset(setup_mpl):
     x = np.linspace(0, 1)
 
     for yoffset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
@@ -293,7 +293,7 @@ def test_yoffset(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_outline(setupMpl):
+def test_outline(setup_mpl):
     x = np.linspace(-2, 2)
 
     plt.ylim(-1, 5)
@@ -312,7 +312,7 @@ def test_outline(setupMpl):
 
 
 @pytest.mark.mpl_image_compare
-def test_auto_layout(setupMpl):
+def test_auto_layout(setup_mpl):
     X = [[1, 2], [0, 1]]
     Y = [[0, 1], [0, 1]]
 
@@ -349,7 +349,7 @@ def test_warning_out_of_range():
 
 
 @pytest.mark.mpl_image_compare
-def test_errorbar_with_list(setupMpl):
+def test_errorbar_with_list(setup_mpl):
     np.random.seed(1234)
     fig, ax = plt.subplots()
     samples = ["a", "b"]
