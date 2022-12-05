@@ -28,6 +28,6 @@ repos:
     hooks:
     - id: mypy
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.143
+    rev: v0.0.158
     hooks:
       - id: ruff
