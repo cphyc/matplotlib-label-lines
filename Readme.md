@@ -82,3 +82,6 @@ labelLines(ax.get_lines(), xvals=(0.1, 1), zorder=2.5)
 fig.show()
 ```
 ![Example](https://raw.githubusercontent.com/cphyc/matplotlib-label-lines/master/example.png)
+
+# Citing
+If you're using this package for research purposes, consider citing the [Zenodo entry (https://zenodo.org/record/7428071)](https://zenodo.org/record/7428071).
