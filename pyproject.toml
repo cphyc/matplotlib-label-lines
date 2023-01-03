@@ -7,31 +7,26 @@ requires = [
 
 [tool.black]
 line-length = 88
-target-version = ['py37', 'py38', 'py39', 'py310', 'py311']
-
-
-[tool.isort]
-profile = "black"
-combine_as_imports = true
-skip =  []
-known_third_party = [
-  "numpy",
-  "matplotlib",
-]
-known_first_party = ["labellines"]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+target-version = ['py38', 'py39', 'py310', 'py311']
 
 [tool.pytest.ini_options]
 filterwarnings = [
     "error",
 ]
 
-
 [tool.ruff]
 # Enable Pyflakes `E` and `F` codes by default.
 select = ["E", "C", "F", "U", "B", "A", "YTT", "S", "N"]
-ignore = ["N802", "N806", "C901"]
-target-version = 'py37'
+ignore = ["N802", "N806", "C901", "UP007"]
+target-version = 'py38'
 
 [tool.ruff.per-file-ignores]
 "**/test*.py" = ["S101"]
+
+[tool.ruff.isort]
+combine-as-imports = true
+known-first-party = ["labellines"]
+known-third-party = [
+  "numpy",
+  "matplotlib",
+]
