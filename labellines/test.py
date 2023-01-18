@@ -61,7 +61,7 @@ def test_xlogspace(setup_mpl):
 
 @pytest.mark.mpl_image_compare
 def test_xylogspace(setup_mpl):
-    x = np.geomspace(1e-1, 1e1)
+    x = np.geomspace(0.1, 1e1)
     K = np.arange(-5, 5, 2)
 
     for k in K:
@@ -73,6 +73,9 @@ def test_xylogspace(setup_mpl):
     plt.xlabel("$x$")
     plt.ylabel("$f(x)$")
     plt.ylim(1e-6, 1e6)
+    # We need to fix the xlims to prevent funky xlims
+    # see PR #115
+    plt.xlim(0.1 / 1.2, 1e1 * 1.2)
     return plt.gcf()
 
 
