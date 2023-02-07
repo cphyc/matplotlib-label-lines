@@ -115,7 +115,6 @@ class LineLabel(Text):
 
         # Apply outline effect
         if outline_color is not None:
-
             if outline_color == "auto":
                 outline_color = line.axes.get_facecolor()
 
