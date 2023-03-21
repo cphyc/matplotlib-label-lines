@@ -72,6 +72,7 @@ def labelLine(
                 )
                 % line,
                 UserWarning,
+                stacklevel=1,
             )
             return
         raise err
@@ -149,6 +150,7 @@ def labelLines(
             warnings.warn(
                 "Tried to label line %s, but could not find a label for it." % line,
                 UserWarning,
+                stacklevel=1,
             )
 
     # In case no x location was provided, we need to use some heuristics
@@ -210,6 +212,7 @@ def labelLines(
                 )
                 % (i, min(xdata), max(xdata), xv),
                 UserWarning,
+                stacklevel=1,
             )
             new_xv = min(xdata) + (max(xdata) - min(xdata)) * 0.9
             xvals[i] = new_xv
