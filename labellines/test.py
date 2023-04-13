@@ -353,6 +353,15 @@ def test_errorbar_with_list(setup_mpl):
     return fig
 
 
+@pytest.mark.mpl_image_compare
+def test_labeling_axhline(setup_mpl):
+    fig, ax = plt.subplots()
+    ax.plot([10, 12, 13], [1, 2, 3], label="plot")
+    ax.axhline(y=2, label="axhline")
+    labelLines()
+    return fig
+
+
 @pytest.fixture
 def create_plot():
     fig, ax = plt.subplots()
