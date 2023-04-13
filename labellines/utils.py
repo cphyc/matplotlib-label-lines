@@ -1,7 +1,4 @@
-from datetime import datetime
-
 import numpy as np
-from matplotlib.dates import date2num
 from matplotlib.lines import Line2D
 
 
@@ -13,32 +10,7 @@ def normalize_xydata(line: Line2D) -> tuple[np.ndarray, np.ndarray]:
     axes_t = line.axes.transData.inverted().transform
     x, y = axes_t(line_t(line.get_xydata())).T
 
-    x, y = _convert_to_float(x), _convert_to_float(y)
     return x, y
-
-
-def _convert_to_float(value) -> float:
-    try:
-        # the last 3 boolean checks are for arrays with datetime64 and with
-        # a timezone, see these SO posts:
-        # https://stackoverflow.com/q/60714568/4549682
-        # https://stackoverflow.com/q/23063362/4549682
-        is_date_array = np.issubdtype(value.dtype, np.datetime64) or str(
-            value.dtype
-        ).startswith("datetime64")
-        is_array_of_dates = value.dtype == "O" and all(
-            isinstance(val, (datetime, np.datetime64)) for val in value
-        )
-        if (
-            isinstance(value, (datetime, np.datetime64))
-            or is_date_array
-            or is_array_of_dates
-        ):
-            return date2num(value)
-        else:  # another numpy dtype like float64
-            return np.asarray(value, dtype=float)
-    except AttributeError:  # possibly int or other float/int dtype
-        return value
 
 
 # From https://www.geeksforgeeks.org/maximum-bipartite-matching/
