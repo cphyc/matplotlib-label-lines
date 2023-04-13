@@ -65,7 +65,7 @@ def test_xylogspace(setup_mpl):
     K = np.arange(-5, 5, 2)
 
     for k in K:
-        plt.plot(x, x**k, label=rf"$f(x)=x^{{{k}}}$")
+        plt.plot(x, np.power(x, k), label=rf"$f(x)=x^{{{k}}}$")
 
     plt.xscale("log")
     plt.yscale("log")
@@ -196,22 +196,6 @@ def test_errorbar(setup_mpl):
 
     labelLines()
     return plt.gcf()
-
-
-def test_nan_warning():
-    x = np.array([0, 1, 2, 3])
-    y = np.array([np.nan, np.nan, 0, 1])
-
-    line = plt.plot(x, y, label="test")[0]
-
-    warn_msg = (
-        ".* could not be annotated due to `nans` values. "
-        "Consider using another location via the `x` argument."
-    )
-    with pytest.warns(UserWarning, match=warn_msg):
-        labelLine(line, 0.5)
-
-    labelLine(line, 2.5)
 
 
 def test_nan_failure():

@@ -2,10 +2,22 @@ from datetime import datetime
 
 import numpy as np
 from matplotlib.dates import date2num
+from matplotlib.lines import Line2D
 
 
-def ensure_float(value):
-    """Make sure datetime values are properly converted to floats."""
+def normalize_xydata(line: Line2D) -> tuple[np.ndarray, np.ndarray]:
+    """Make sure datetime values are properly converted to floats and convert
+    into data coordinates."""
+    # Convert the data into the data coordinates
+    line_t = line.get_transform().transform
+    axes_t = line.axes.transData.inverted().transform
+    x, y = axes_t(line_t(line.get_xydata())).T
+
+    x, y = _convert_to_float(x), _convert_to_float(y)
+    return x, y
+
+
+def _convert_to_float(value) -> float:
     try:
         # the last 3 boolean checks are for arrays with datetime64 and with
         # a timezone, see these SO posts:
