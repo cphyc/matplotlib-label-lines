@@ -7,7 +7,7 @@ from matplotlib.dates import DateConverter, num2date
 from more_itertools import always_iterable
 
 from .line_label import LineLabel
-from .utils import ensure_float, maximum_bipartite_matching
+from .utils import maximum_bipartite_matching, normalize_xydata
 
 
 # Label line with line2D label data
@@ -175,7 +175,7 @@ def labelLines(
         ok_matrix = np.zeros((len(all_lines), len(all_lines)), dtype=bool)
 
         for i, line in enumerate(all_lines):
-            xdata = ensure_float(line.get_xdata())
+            xdata, _ = normalize_xydata(line)
             minx, maxx = min(xdata), max(xdata)
             for j, xv in enumerate(xvals):
                 ok_matrix[i, j] = minx < xv < maxx
@@ -202,7 +202,7 @@ def labelLines(
         labels.append(label)
 
         # Move xlabel if it is outside valid range
-        xdata = ensure_float(line.get_xdata())
+        xdata, _ = normalize_xydata(line)
         if not (min(xdata) <= xv <= max(xdata)):
             warnings.warn(
                 (

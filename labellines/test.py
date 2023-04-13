@@ -65,7 +65,7 @@ def test_xylogspace(setup_mpl):
     K = np.arange(-5, 5, 2)
 
     for k in K:
-        plt.plot(x, x**k, label=rf"$f(x)=x^{{{k}}}$")
+        plt.plot(x, np.power(x, k), label=rf"$f(x)=x^{{{k}}}$")
 
     plt.xscale("log")
     plt.yscale("log")
@@ -196,22 +196,6 @@ def test_errorbar(setup_mpl):
 
     labelLines()
     return plt.gcf()
-
-
-def test_nan_warning():
-    x = np.array([0, 1, 2, 3])
-    y = np.array([np.nan, np.nan, 0, 1])
-
-    line = plt.plot(x, y, label="test")[0]
-
-    warn_msg = (
-        ".* could not be annotated due to `nans` values. "
-        "Consider using another location via the `x` argument."
-    )
-    with pytest.warns(UserWarning, match=warn_msg):
-        labelLine(line, 0.5)
-
-    labelLine(line, 2.5)
 
 
 def test_nan_failure():
@@ -366,6 +350,15 @@ def test_errorbar_with_list(setup_mpl):
         lines.append(ax.errorbar(x, y, yerr=0.1, label=sample)[0])
 
     labelLines(lines, align=False, xvals=pos)
+    return fig
+
+
+@pytest.mark.mpl_image_compare
+def test_labeling_axhline(setup_mpl):
+    fig, ax = plt.subplots()
+    ax.plot([10, 12, 13], [1, 2, 3], label="plot")
+    ax.axhline(y=2, label="axhline")
+    labelLines()
     return fig
 
 

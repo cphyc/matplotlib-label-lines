@@ -6,6 +6,8 @@ import matplotlib.patheffects as patheffects
 import numpy as np
 from matplotlib.text import Text
 
+from .utils import normalize_xydata
+
 if TYPE_CHECKING:
     from datetime import datetime
     from typing import Any, Literal, Optional, Union
@@ -139,8 +141,7 @@ class LineLabel(Text):
         """
         # Use the mpl-internal float representation (deals with datetime etc)
         x = self._line.convert_xunits(self._target_x)
-        xdata = self._line.get_xdata(orig=False)
-        ydata = self._line.get_ydata(orig=False)
+        xdata, ydata = normalize_xydata(self._line)
 
         mask = np.isfinite(ydata)
         if mask.sum() == 0:
