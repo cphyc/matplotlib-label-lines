@@ -130,7 +130,7 @@ def labelLines(
     handles, labels_of_handles = ax.get_legend_handles_labels()
 
     all_lines, all_labels = [], []
-    for h in handles:
+    for h, label in zip(handles, labels_of_handles):
         if isinstance(h, ErrorbarContainer):
             line = h.lines[0]
         else:
@@ -140,7 +140,7 @@ def labelLines(
         if (lines is not None) and (line not in lines):
             continue
         all_lines.append(line)
-        all_labels.append(line.get_label())
+        all_labels.append(label)
 
     # Check that the lines passed to the function have all a label
     if lines is not None:
