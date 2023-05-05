@@ -206,11 +206,10 @@ def labelLines(
         if not (min(xdata) <= xv <= max(xdata)):
             warnings.warn(
                 (
-                    "The value at position %s in `xvals` is outside the range of its "
-                    "associated line (xmin=%s, xmax=%s, xval=%s). Clipping it "
+                    "The value at position {} in `xvals` is outside the range of its "
+                    "associated line (xmin={}, xmax={}, xval={}). Clipping it "
                     "into the allowed range."
-                )
-                % (i, min(xdata), max(xdata), xv),
+                ).format(i, min(xdata), max(xdata), xv),
                 UserWarning,
                 stacklevel=1,
             )
