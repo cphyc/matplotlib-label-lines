@@ -127,9 +127,9 @@ def labelLines(
     else:
         ax = plt.gca()
 
-    handles, all_labels = ax.get_legend_handles_labels()
+    handles, labels_of_handles = ax.get_legend_handles_labels()
 
-    all_lines = []
+    all_lines, all_labels = [], []
     for h in handles:
         if isinstance(h, ErrorbarContainer):
             line = h.lines[0]
@@ -140,6 +140,7 @@ def labelLines(
         if (lines is not None) and (line not in lines):
             continue
         all_lines.append(line)
+        all_labels.append(line.get_label())
 
     # Check that the lines passed to the function have all a label
     if lines is not None:
@@ -206,11 +207,10 @@ def labelLines(
         if not (min(xdata) <= xv <= max(xdata)):
             warnings.warn(
                 (
-                    "The value at position %s in `xvals` is outside the range of its "
-                    "associated line (xmin=%s, xmax=%s, xval=%s). Clipping it "
+                    "The value at position {} in `xvals` is outside the range of its "
+                    "associated line (xmin={}, xmax={}, xval={}). Clipping it "
                     "into the allowed range."
-                )
-                % (i, min(xdata), max(xdata), xv),
+                ).format(i, min(xdata), max(xdata), xv),
                 UserWarning,
                 stacklevel=1,
             )
