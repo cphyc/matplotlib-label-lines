@@ -203,7 +203,7 @@ def test_nan_failure():
     y = np.array([np.nan, np.nan])
 
     line = plt.plot(x, y, label="test")[0]
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         labelLine(line, 0.5)
 
 
@@ -213,9 +213,9 @@ def test_label_range(setup_mpl):
     line = plt.plot(x, x**2, label="lorem ipsum")[0]
 
     # This should fail
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         labelLine(line, -1)
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         labelLine(line, 2)
 
     # This should work
