@@ -47,7 +47,7 @@ for a in A:
     ax.plot(X, loglaplace(4).pdf(a * X), label=str(a))
 
 xvals = [0.8, 0.55, 0.22, 0.104, 0.045]
-labelLines(ax.get_lines(), align=False, xvals=xvals, color="k")
+labelLines(ax.get_lines(), align=False, vals=xvals, color="k")
 
 ax = axes[3]
 for a in A:
@@ -77,7 +77,7 @@ ax = axes[5]
 for a in A:
     ax.semilogx(X, chi2(5).pdf(a * X), label=str(a))
 
-labelLines(ax.get_lines(), xvals=(0.1, 1), zorder=2.5)
+labelLines(ax.get_lines(), vals=(0.1, 1), zorder=2.5)
 
 fig.show()
 ```
