@@ -208,9 +208,9 @@ def labelLines(
             # The maximum match may miss a few points, let's add them back
             order[order < 0] = np.setdiff1d(np.arange(len(order)), order[order >= 0])
 
-            # Now reorder the xvalues
-            old_xvals = vals.copy()
-            vals[order] = old_xvals
+            # Now reorder the values
+            old_vals = vals.copy()
+            vals[order] = old_vals
     else:
         vals = list(always_iterable(vals))  # force the creation of a copy
 
@@ -230,7 +230,7 @@ def labelLines(
             warnings.warn(
                 (
                     "The value at position {} in `vals` is outside the range of its "
-                    "associated line (vmin={}, vmax={}, xval={}). Clipping it "
+                    "associated line (vmin={}, vmax={}, val={}). Clipping it "
                     "into the allowed range."
                 ).format(i, min(data), max(data), val),
                 UserWarning,
