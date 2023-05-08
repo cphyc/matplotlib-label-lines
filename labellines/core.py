@@ -120,7 +120,8 @@ def labelLines(
        Relative distance from the edges to place closest labels. Defaults to 0.05.
     offsets : number or list, optional.
         Distance relative to the line when positioning the labels. If given a number,
-        the same value is used for all lines. It refers to the *other* axis (i.e. to y if axis=="x")
+        the same value is used for all lines. It refers to the *other* axis 
+        (i.e. to y if axis=="x")
     outline_color : None | "auto" | color
         Colour of the outline. If set to "auto", use the background color.
         If set to None, do not draw an outline.
