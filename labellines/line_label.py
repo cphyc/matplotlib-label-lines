@@ -162,7 +162,9 @@ class LineLabel(Text):
             raise ValueError(f"The line {self._line} only contains nan!")
 
         # Find the first line segment surrounding val
-        for i, (this_a, this_b) in enumerate(zip(this_axis_data[:-1], this_axis_data[1:])):
+        for i, (this_a, this_b) in enumerate(
+            zip(this_axis_data[:-1], this_axis_data[1:])
+        ):
             if min(this_a, this_b) <= val <= max(this_a, this_b):
                 other_a, other_b = other_axis_data[i], other_axis_data[i + 1]
                 break
@@ -180,7 +182,7 @@ class LineLabel(Text):
 
         # Apply y offset
         if self._offset_logspace:
-            other_var *= 10 ** self._offset
+            other_var *= 10**self._offset
         else:
             other_var += self._offset
 

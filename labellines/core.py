@@ -183,9 +183,7 @@ def labelLines(
         vmin, vmax = vals
         xscale = ax.get_xscale()
         if xscale == "log":
-            vals = np.logspace(np.log10(vmin), np.log10(vmax), len(all_lines) + 2)[
-                   1:-1
-                   ]
+            vals = np.logspace(np.log10(vmin), np.log10(vmax), len(all_lines) + 2)[1:-1]
         else:
             vals = np.linspace(vmin, vmax, len(all_lines) + 2)[1:-1]
 
