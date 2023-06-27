@@ -14,7 +14,7 @@ repos:
     - id: black
       language_version: python3
 -   repo: https://github.com/asottile/blacken-docs
-    rev: 1.13.0
+    rev: 1.14.0
     hooks:
     - id: blacken-docs
       additional_dependencies: [black==22.1.0]
@@ -24,10 +24,10 @@ repos:
     - id: isort
       name: isort (python)
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
+    rev: v1.4.1
     hooks:
     - id: mypy
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.272
+    rev: v0.0.275
     hooks:
       - id: ruff
