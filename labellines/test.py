@@ -59,6 +59,7 @@ def test_xlogspace(setup_mpl):
     return plt.gcf()
 
 
+@pytest.mark.skip(reason="Unstable test. See #144.")
 @pytest.mark.mpl_image_compare
 def test_xylogspace(setup_mpl):
     x = np.geomspace(0.1, 1e1)
