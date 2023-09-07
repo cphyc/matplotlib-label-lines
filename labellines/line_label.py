@@ -26,8 +26,11 @@ class LineLabel(Text):
     _line: Line2D
     """Annotated line"""
 
-    _target_x: Position
-    """Requested x position of the label, as supplied by the user"""
+    _target_val: Position
+    """Requested x/y position of the label, as supplied by the user"""
+
+    _yaxis: bool
+    """Whether the reference axis for the label placement is y"""
 
     _ax: Axes
     """Axes containing the line"""
@@ -35,10 +38,10 @@ class LineLabel(Text):
     _auto_align: bool
     """Align text with the line (True) or parallel to x axis (False)"""
 
-    _yoffset: float
+    _offset: float
     """An additional y offset for the label"""
 
-    _yoffset_logspace: bool
+    _offset_logspace: bool
     """Sets whether to treat _yoffset exponentially"""
 
     _label_pos: np.ndarray
@@ -53,11 +56,12 @@ class LineLabel(Text):
     def __init__(
         self,
         line: Line2D,
-        x: Position,
+        val: Position,
+        axis: str,
         label: Optional[str] = None,
         align: bool = True,
-        yoffset: float = 0,
-        yoffset_logspace: bool = False,
+        offset: float = 0,
+        offset_logspace: bool = False,
         outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
         outline_width: float = 8,
         **kwargs,
@@ -68,16 +72,18 @@ class LineLabel(Text):
         ----------
         line : Line2D
             Line to be decorated.
-        x : Position
+        val : Position
             Horizontal target position for the label (in data units).
+        axis : str
+            Reference axis for `val`.
         label : str, optional
             Override for line label, by default None.
         align : bool, optional
             If true, the label is parallel to the line, otherwise horizontal,
             by default True.
-        yoffset : float, optional
+        offset : float, optional
             An additional y offset for the line label, by default 0.
-        yoffset_logspace : bool, optional
+        offset_logspace : bool, optional
             If true yoffset is applied exponentially to appear linear on a log-axis,
             by default False.
         outline_color : None | "auto" | Colorlike
@@ -87,11 +93,12 @@ class LineLabel(Text):
             Width of the outline, by default 8.
         """
         self._line = line
-        self._target_x = x
+        self._target_val = val
+        self._yaxis = True if axis == "y" else False
         self._ax = line.axes
         self._auto_align = align
-        self._yoffset = yoffset
-        self._yoffset_logspace = yoffset_logspace
+        self._offset = offset
+        self._offset_logspace = offset_logspace
         label = label or line.get_label()
 
         # Populate self._pos, self._anchor_a, self._anchor_b
@@ -140,45 +147,59 @@ class LineLabel(Text):
         the anchor points needed to adjust the rotation
         """
         # Use the mpl-internal float representation (deals with datetime etc)
-        x = self._line.convert_xunits(self._target_x)
         xdata, ydata = normalize_xydata(self._line)
+        if self._yaxis:
+            val = self._line.convert_yunits(self._target_val)
+            this_axis_data = ydata
+            other_axis_data = xdata
+        else:
+            val = self._line.convert_xunits(self._target_val)
+            this_axis_data = xdata
+            other_axis_data = ydata
 
         mask = np.isfinite(ydata)
         if mask.sum() == 0:
             raise ValueError(f"The line {self._line} only contains nan!")
 
-        # Find the first line segment surrounding x
-        for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-            if min(xa, xb) <= x <= max(xa, xb):
-                ya, yb = ydata[i], ydata[i + 1]
+        # Find the first line segment surrounding val
+        for i, (this_a, this_b) in enumerate(
+            zip(this_axis_data[:-1], this_axis_data[1:])
+        ):
+            if min(this_a, this_b) <= val <= max(this_a, this_b):
+                other_a, other_b = other_axis_data[i], other_axis_data[i + 1]
                 break
         else:
-            raise ValueError("x label location is outside data range!")
+            raise ValueError("label location is outside data range!")
 
         # Interpolate y position of label, (interp needs sorted data)
-        if xa != xb:
-            dx = np.array((xa, xb))
-            dy = np.array((ya, yb))
-            srt = np.argsort(dx)
-            y = np.interp(x, dx[srt], dy[srt])
+        if this_a != this_b:
+            d_this = np.array((this_a, this_b))
+            d_other = np.array((other_a, other_b))
+            srt = np.argsort(d_this)
+            other_var = np.interp(val, d_this[srt], d_other[srt])
         else:  # Vertical case
-            y = (ya + yb) / 2
+            other_var = (other_a + other_b) / 2
 
         # Apply y offset
-        if self._yoffset_logspace:
-            y *= 10**self._yoffset
+        if self._offset_logspace:
+            other_var *= 10**self._offset
         else:
-            y += self._yoffset
+            other_var += self._offset
 
-        if not np.isfinite(y):
+        if not np.isfinite(other_var):
             raise ValueError(
                 f"{self._line} does not have a well defined value"
-                f" at x = {self._target_x}. Consider a different position."
+                f" at val = {self._target_val}. Consider a different position."
             )
 
-        self._label_pos = np.array((x, y))
-        self._anchor_a = np.array((xa, ya))
-        self._anchor_b = np.array((xb, yb))
+        if self._yaxis:
+            self._label_pos = np.array((other_var, val))
+            self._anchor_a = np.array((other_a, this_a))
+            self._anchor_b = np.array((other_b, this_b))
+        else:
+            self._label_pos = np.array((val, other_var))
+            self._anchor_a = np.array((this_a, other_a))
+            self._anchor_b = np.array((this_b, other_b))
 
     def _get_rotation(self):
         # Providing the _rotation property

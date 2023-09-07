@@ -123,7 +123,7 @@ def test_labels_range(setup_mpl):
     plt.plot(x, np.sin(x), label=r"$\sin x$")
     plt.plot(x, np.cos(x), label=r"$\cos x$")
 
-    labelLines(plt.gca().get_lines(), xvals=(0, 0.5))
+    labelLines(plt.gca().get_lines(), vals=(0, 0.5))
     return plt.gcf()
 
 
@@ -276,7 +276,7 @@ def test_yoffset(setup_mpl):
         ax.plot(x, np.cos(x) * 10, label=r"$\cos x$")
         lines = ax.get_lines()
         labelLines(
-            lines, xvals=(0.2, 0.7), align=False, yoffsets=yoffset, bbox={"alpha": 0}
+            lines, vals=(0.2, 0.7), align=False, offsets=yoffset, bbox={"alpha": 0}
         )
 
 
@@ -320,20 +320,20 @@ def test_warning_out_of_range():
     with pytest.warns(
         UserWarning,
         match=(
-            "The value at position 0 in `xvals` is outside the range of its "
+            "The value at position 0 in `vals` is outside the range of its "
             "associated line"
         ),
     ):
-        labelLines(lines, xvals=[-1])
+        labelLines(lines, vals=[-1])
 
     with pytest.warns(
         UserWarning,
         match=(
-            "The value at position 0 in `xvals` is outside the range of its "
+            "The value at position 0 in `vals` is outside the range of its "
             "associated line"
         ),
     ):
-        labelLines(lines, xvals=[2])
+        labelLines(lines, vals=[2])
 
 
 @pytest.mark.mpl_image_compare
@@ -350,7 +350,7 @@ def test_errorbar_with_list(setup_mpl):
     for sample, y in zip(samples, ys):
         lines.append(ax.errorbar(x, y, yerr=0.1, label=sample)[0])
 
-    labelLines(lines, align=False, xvals=pos)
+    labelLines(lines, align=False, vals=pos)
     return fig
 
 
