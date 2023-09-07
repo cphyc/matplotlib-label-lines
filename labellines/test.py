@@ -46,7 +46,7 @@ def test_ylogspace(setup_mpl):
 
 @pytest.mark.mpl_image_compare
 def test_xlogspace(setup_mpl):
-    x = np.linspace(0, 1)
+    x = np.linspace(0, 10)
     K = [1, 2, 4]
 
     for k in K:

@@ -158,9 +158,19 @@ def labelLines(
     # to generate them.
     if xvals is None:
         xvals = ax.get_xlim()
-        xvals_rng = xvals[1] - xvals[0]
-        shrinkage = xvals_rng * shrink_factor
-        xvals = (xvals[0] + shrinkage, xvals[1] - shrinkage)
+        xscale = ax.get_xscale()
+        if xscale == "log":
+            log10_xvals = np.log10(xvals)
+            xvals_rng = log10_xvals[1] - log10_xvals[0]
+            shrinkage = xvals_rng * shrink_factor
+            xvals = (
+                10 ** (log10_xvals[0] + shrinkage),
+                10 ** (log10_xvals[1] - shrinkage),
+            )
+        else:
+            xvals_rng = xvals[1] - xvals[0]
+            shrinkage = xvals_rng * shrink_factor
+            xvals = (xvals[0] + shrinkage, xvals[1] - shrinkage)
 
     if isinstance(xvals, tuple) and len(xvals) == 2:
         xmin, xmax = xvals
