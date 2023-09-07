@@ -163,7 +163,10 @@ def labelLines(
             log10_xvals = np.log10(xvals)
             xvals_rng = log10_xvals[1] - log10_xvals[0]
             shrinkage = xvals_rng * shrink_factor
-            xvals = (10**(log10_xvals[0] + shrinkage), 10**(log10_xvals[1] - shrinkage))
+            xvals = (
+                10 ** (log10_xvals[0] + shrinkage),
+                10 ** (log10_xvals[1] - shrinkage),
+            )
         else:
             xvals_rng = xvals[1] - xvals[0]
             shrinkage = xvals_rng * shrink_factor
