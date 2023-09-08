@@ -53,6 +53,9 @@ def test_xlogspace(setup_mpl):
         plt.plot(10**x, k * x, label=r"$f(x)=%s x$" % k)
 
     plt.xscale("log")
+    # NOTE: depending on roundoff, the upper limit may be
+    # 1e11 or 1e10. See PR #155.
+    plt.xlim(1e0, 1e11)
     labelLines(plt.gca().get_lines(), zorder=2.5)
     plt.xlabel("$x$")
     plt.ylabel("$f(x)$")
