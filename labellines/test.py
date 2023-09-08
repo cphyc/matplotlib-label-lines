@@ -59,7 +59,6 @@ def test_xlogspace(setup_mpl):
     return plt.gcf()
 
 
-@pytest.mark.skip(reason="Unstable test. See #144.")
 @pytest.mark.mpl_image_compare
 def test_xylogspace(setup_mpl):
     x = np.geomspace(0.1, 1e1)
@@ -70,7 +69,13 @@ def test_xylogspace(setup_mpl):
 
     plt.xscale("log")
     plt.yscale("log")
-    labelLines(plt.gca().get_lines(), zorder=2.5)
+
+    # We fix the xvals to prevent out-of-range
+    labelLines(
+        plt.gca().get_lines(),
+        xvals=(0.1, 1e1),
+        zorder=2.5,
+    )
     plt.xlabel("$x$")
     plt.ylabel("$f(x)$")
     plt.ylim(1e-6, 1e6)
