@@ -185,6 +185,8 @@ class LineLabel(Text):
         self._anchor_b = np.array((xb, yb))
 
     def __auto_align(self, value=None):
+        # Helper function  to help  resize the  alignment of
+        # the label if the window is resized
         # Providing the _rotation property
         # enables automatic adjustment of the rotation angle
         # Adapted from https://stackoverflow.com/a/53111799
