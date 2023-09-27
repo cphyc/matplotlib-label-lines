@@ -86,6 +86,8 @@ class LineLabel(Text):
             If set to None, do not draw an outline, by default "auto".
         outline_width : float
             Width of the outline, by default 8.
+        rotation: float
+            If set and align = False, controls the angle of the label
         """
         self._line = line
         self._target_x = x
