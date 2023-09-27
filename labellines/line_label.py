@@ -60,7 +60,7 @@ class LineLabel(Text):
         yoffset_logspace: bool = False,
         outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
         outline_width: float = 8,
-        rotation: float = 0,
+        rotation: Optional[float] = None,
         **kwargs,
     ) -> None:
         """
@@ -86,7 +86,7 @@ class LineLabel(Text):
             If set to None, do not draw an outline, by default "auto".
         outline_width : float
             Width of the outline, by default 8.
-        rotation: float
+        rotation: Optional[float]
             If set and align = False, controls the angle of the label
         """
         self._line = line
@@ -99,6 +99,13 @@ class LineLabel(Text):
 
         # Populate self._pos, self._anchor_a, self._anchor_b
         self._update_anchors()
+        if align and rotation != None:
+            raise ValueError(
+                f"When rotation is set, align needs to be false or none was {align=}"
+            )
+        # if rotation is unset we assume 0
+        elif rotation == None:
+            rotation = 0
         self._rotation = rotation  # ensure rotation is activated after anchor
 
         # Set a bunch of default arguments
