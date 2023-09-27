@@ -95,11 +95,11 @@ class LineLabel(Text):
         self._auto_align = align
         self._yoffset = yoffset
         self._yoffset_logspace = yoffset_logspace
-        self._rotation = rotation
         label = label or line.get_label()
 
         # Populate self._pos, self._anchor_a, self._anchor_b
         self._update_anchors()
+        self._rotation = rotation  # ensure rotation is activated after anchor
 
         # Set a bunch of default arguments
         kwargs.setdefault("color", self._line.get_color())
@@ -184,12 +184,7 @@ class LineLabel(Text):
         self._anchor_a = np.array((xa, ya))
         self._anchor_b = np.array((xb, yb))
 
-    @property
-    def _rotation(self):
-        return self.__rotation
-
-    @_rotation.setter
-    def _rotation(self, rotation):
+    def __auto_align(self, value=None):
         # Providing the _rotation property
         # enables automatic adjustment of the rotation angle
         # Adapted from https://stackoverflow.com/a/53111799
@@ -201,9 +196,15 @@ class LineLabel(Text):
             angle = np.rad2deg(np.arctan2(yb - ya, xb - xa))
 
             # Correct the angle to make sure text is always upright-ish
-            self.__rotation = (angle + 90) % 180 - 90
-        else:
-            if isinstance(rotation, float) or isinstance(rotation, int):
-                self.__rotation = rotation
-            else:
-                raise ValueError("Input should be of type float or int")
+            value = (angle + 90) % 180 - 90
+        if isinstance(value, float) or isinstance(value, int):
+            self.__rotation = value
+        return self.__rotation
+
+    @property
+    def _rotation(self):
+        return self.__auto_align()
+
+    @_rotation.setter
+    def _rotation(self, rotation):
+        self.__rotation = self.__auto_align(rotation)
