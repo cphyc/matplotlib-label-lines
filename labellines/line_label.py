@@ -92,7 +92,7 @@ class LineLabel(Text):
         # When rotation is set, align has to be false or None
         if rotation is None:
             rotation = 0
-        elif align == True:
+        elif align is True:
             raise ValueError(
                 f"When rotation is set, align needs to be false or none was {align=}."
             )
