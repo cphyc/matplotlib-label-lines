@@ -21,7 +21,7 @@ def labelLine(
     yoffset_logspace=False,
     outline_color="auto",
     outline_width=8,
-    rotation: Optional[float] = None,
+    rotation=None,
     **kwargs,
 ):
     """
@@ -67,6 +67,7 @@ def labelLine(
             yoffset_logspace=yoffset_logspace,
             outline_color=outline_color,
             outline_width=outline_width,
+            rotation=rotation,
             **kwargs,
         )
     except ValueError as err:
@@ -91,14 +92,14 @@ def labelLine(
 
 def labelLines(
     lines=None,
-    align=False,
+    align=True,
     xvals=None,
     drop_label=False,
     shrink_factor=0.05,
     yoffsets=0,
     outline_color="auto",
     outline_width=5,
-    rotation: Optional[bool] = None,
+    rotation=None,
     **kwargs,
 ):
     """Label all lines with their respective legends.
@@ -254,6 +255,7 @@ def labelLines(
                 yoffset=yoffset,
                 outline_color=outline_color,
                 outline_width=outline_width,
+                rotation=rotation,
                 **kwargs,
             )
         )
