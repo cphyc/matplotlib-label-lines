@@ -15,12 +15,13 @@ def labelLine(
     line,
     x,
     label=None,
-    align=True,
+    align=Optional[bool] = None,
     drop_label=False,
     yoffset=0,
     yoffset_logspace=False,
     outline_color="auto",
     outline_width=8,
+    rotation = Optional[float] = None,
     **kwargs,
 ):
     """
@@ -34,6 +35,9 @@ def labelLine(
        The location in data unit of the label
     label : string, optional
        The label to set. This is inferred from the line by default
+    align : boolean, optional
+       If True, the label will be aligned with the slope of the line
+       at the location of the label. If False, they will be horizontal.
     drop_label : bool, optional
        If True, the label is consumed by the function so that subsequent
        calls to e.g. legend do not use it anymore.
@@ -47,6 +51,8 @@ def labelLine(
         If set to None, do not draw an outline.
     outline_width : number
         Width of the outline
+    rotation: float, optional
+            If set and align = False, controls the angle of the label
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """
@@ -85,13 +91,14 @@ def labelLine(
 
 def labelLines(
     lines=None,
-    align=True,
+    align= Optional[bool] = None,
     xvals=None,
     drop_label=False,
     shrink_factor=0.05,
     yoffsets=0,
     outline_color="auto",
     outline_width=5,
+    rotation = Optional[bool] = None,
     **kwargs,
 ):
     """Label all lines with their respective legends.
@@ -119,6 +126,8 @@ def labelLines(
         If set to None, do not draw an outline.
     outline_width : number
         Width of the outline
+    rotation: float, optional
+        If set and align = False, controls the angle of the label
     kwargs : dict, optional
        Optional arguments passed to ax.text
     """

@@ -413,3 +413,19 @@ def test_no_warning_line_labeling(create_plot):
 def test_labeling_by_axis(create_plot):
     txts = labelLines()
     assert len(txts) == 2
+
+
+def test_label_line_input():
+    fig, ax = plt.subplots()
+    x = [0, 1]
+    y = x
+    ax.plot(x, y, label="test")
+    msg = "When rotation is set, align needs to be false or none was align=True"
+    with pytest.raises(ValueError, match=msg):
+        labelLines(ax.get_lines(), align=True, rotation=0)
+
+    for label in labelLines(ax.get_lines(), align=True, rotation=None):
+        assert label._rotation != 0
+
+    for label in labelLines(ax.get_lines(), rotation=45):
+        assert label._rotation == 45
