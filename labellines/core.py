@@ -15,13 +15,13 @@ def labelLine(
     line,
     x,
     label=None,
-    align=Optional[bool] = None,
+    align=True,
     drop_label=False,
     yoffset=0,
     yoffset_logspace=False,
     outline_color="auto",
     outline_width=8,
-    rotation = Optional[float] = None,
+    rotation: Optional[float] = None,
     **kwargs,
 ):
     """
@@ -91,14 +91,14 @@ def labelLine(
 
 def labelLines(
     lines=None,
-    align= Optional[bool] = None,
+    align=False,
     xvals=None,
     drop_label=False,
     shrink_factor=0.05,
     yoffsets=0,
     outline_color="auto",
     outline_width=5,
-    rotation = Optional[bool] = None,
+    rotation: Optional[bool] = None,
     **kwargs,
 ):
     """Label all lines with their respective legends.
