@@ -99,7 +99,7 @@ class LineLabel(Text):
 
         # Populate self._pos, self._anchor_a, self._anchor_b
         self._update_anchors()
-        if align and rotation != None:
+        if align and rotation is not None:
             raise ValueError(
                 f"When rotation is set, align needs to be false or none was {align=}"
             )
