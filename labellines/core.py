@@ -15,7 +15,7 @@ def labelLine(
     line,
     x,
     label=None,
-    align=True,
+    align=None,
     drop_label=False,
     yoffset=0,
     yoffset_logspace=False,
@@ -92,7 +92,7 @@ def labelLine(
 
 def labelLines(
     lines=None,
-    align=True,
+    align=None,
     xvals=None,
     drop_label=False,
     shrink_factor=0.05,

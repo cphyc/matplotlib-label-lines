@@ -90,13 +90,20 @@ class LineLabel(Text):
             If set and align = False, controls the angle of the label.
         """
         # When rotation is set, align has to be false or None
-        if rotation is None:
-            rotation = 0
-        elif align is True:
+        if rotation is not None and align:
             raise ValueError(
                 f"When rotation is set, align needs to be false or none was {align=}."
             )
-        align = True if align is None else align
+        elif rotation is None:
+            align = True if (align or align is None) else False
+            rotation = 0
+        elif rotation is None and not align:
+            align = False
+            rotation = 0
+        elif not align or align is None:
+            align = False
+            rotation = rotation
+
         self._line = line
         self._target_x = x
         self._ax = line.axes
@@ -207,7 +214,7 @@ class LineLabel(Text):
 
             # Correct the angle to make sure text is always upright-ish
             value = (angle + 90) % 180 - 90
-        if isinstance(value, float) or isinstance(value, int):
+        if isinstance(value, (float, int)):
             self.__rotation = value
         return self.__rotation
 
