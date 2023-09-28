@@ -55,11 +55,12 @@ class LineLabel(Text):
         line: Line2D,
         x: Position,
         label: Optional[str] = None,
-        align: bool = True,
+        align: Optional[bool] = None,
         yoffset: float = 0,
         yoffset_logspace: bool = False,
         outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
         outline_width: float = 8,
+        rotation: Optional[float] = None,
         **kwargs,
     ) -> None:
         """
@@ -85,7 +86,24 @@ class LineLabel(Text):
             If set to None, do not draw an outline, by default "auto".
         outline_width : float
             Width of the outline, by default 8.
+        rotation: float, optional
+            If set and align = False, controls the angle of the label.
         """
+        # When rotation is set, align has to be false or None
+        if rotation is not None and align:
+            raise ValueError(
+                f"When rotation is set, align needs to be false or none was {align=}."
+            )
+        elif rotation is None:
+            align = True if (align or align is None) else False
+            rotation = 0
+        elif rotation is None and not align:
+            align = False
+            rotation = 0
+        elif not align or align is None:
+            align = False
+            rotation = rotation
+
         self._line = line
         self._target_x = x
         self._ax = line.axes
@@ -96,6 +114,7 @@ class LineLabel(Text):
 
         # Populate self._pos, self._anchor_a, self._anchor_b
         self._update_anchors()
+        self._rotation = rotation
 
         # Set a bunch of default arguments
         kwargs.setdefault("color", self._line.get_color())
@@ -180,7 +199,9 @@ class LineLabel(Text):
         self._anchor_a = np.array((xa, ya))
         self._anchor_b = np.array((xb, yb))
 
-    def _get_rotation(self):
+    def __auto_align(self, value=None):
+        # Helper function  to help  resize the  alignment of
+        # the label if the window is resized
         # Providing the _rotation property
         # enables automatic adjustment of the rotation angle
         # Adapted from https://stackoverflow.com/a/53111799
@@ -192,16 +213,15 @@ class LineLabel(Text):
             angle = np.rad2deg(np.arctan2(yb - ya, xb - xa))
 
             # Correct the angle to make sure text is always upright-ish
-            return (angle + 90) % 180 - 90
-        return 0
-
-    def _set_rotation(self, rotation):
-        pass
+            value = (angle + 90) % 180 - 90
+        if isinstance(value, (float, int)):
+            self.__rotation = value
+        return self.__rotation
 
     @property
     def _rotation(self):
-        return self._get_rotation()
+        return self.__auto_align()
 
     @_rotation.setter
     def _rotation(self, rotation):
-        self._set_rotation(rotation)
+        self.__rotation = self.__auto_align(rotation)

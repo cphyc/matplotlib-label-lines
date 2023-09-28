@@ -207,6 +207,33 @@ def test_errorbar(setup_mpl):
     return plt.gcf()
 
 
+@pytest.mark.mpl_image_compare
+def test_rotation(setup_mpl):
+    x = np.linspace(0, 2 * np.pi)
+    y = np.sin(x)
+
+    fig, axes = plt.subplots(2, 2, sharex=True, sharey=True)
+
+    axes = axes.flatten()
+
+    axes[0].set_title("Rotated by 45")
+    (line,) = axes[0].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, rotation=45)
+
+    axes[1].set_title("Rotated by 45\naligned explicitly off")
+    (line,) = axes[1].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, rotation=45, align=False)
+
+    axes[2].set_title("Aligned explicitly on")
+    (line,) = axes[2].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, align=True)
+
+    axes[3].set_title("Default")
+    (line,) = axes[3].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi)
+    return fig
+
+
 def test_nan_failure():
     x = np.array([0, 1])
     y = np.array([np.nan, np.nan])
@@ -413,3 +440,28 @@ def test_no_warning_line_labeling(create_plot):
 def test_labeling_by_axis(create_plot):
     txts = labelLines()
     assert len(txts) == 2
+
+
+def test_label_line_input():
+    fig, ax = plt.subplots()
+    x = [0, 1]
+    y = x
+    ax.plot(x, y, label="test")
+    msg = "When rotation is set, align needs to be false or none was align=True"
+    # test non-allowed combinations of inputs: It is not
+    # allowed to set a rotation while aligning it with the
+    # lines
+    with pytest.raises(ValueError, match=msg):
+        labelLines(ax.get_lines(), align=True, rotation=0)
+
+    # test default settings
+    for label in labelLines(ax.get_lines()):
+        assert label._rotation != 0
+
+    # test setting an angle
+    for label in labelLines(ax.get_lines(), align=False, rotation=45):
+        assert label._rotation == 45
+
+    # test setting an angle, not explicitly setting align
+    for label in labelLines(ax.get_lines(), rotation=45):
+        assert label._rotation == 45
