@@ -448,16 +448,20 @@ def test_label_line_input():
     y = x
     ax.plot(x, y, label="test")
     msg = "When rotation is set, align needs to be false or none was align=True"
-    # test  non-allowed combinations  of inputs:  It is  not
-    # allowed to set  a rotation while aligning  it with the
+    # test non-allowed combinations of inputs: It is not
+    # allowed to set a rotation while aligning it with the
     # lines
     with pytest.raises(ValueError, match=msg):
         labelLines(ax.get_lines(), align=True, rotation=0)
 
-    #  test default settings
+    # test default settings
     for label in labelLines(ax.get_lines()):
         assert label._rotation != 0
 
     # test setting an angle
     for label in labelLines(ax.get_lines(), align=False, rotation=45):
+        assert label._rotation == 45
+
+    # test setting an angle, not explicitly setting align
+    for label in labelLines(ax.get_lines(), rotation=45):
         assert label._rotation == 45
