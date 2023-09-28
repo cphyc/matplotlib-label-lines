@@ -207,6 +207,33 @@ def test_errorbar(setup_mpl):
     return plt.gcf()
 
 
+@pytest.mark.mpl_image_compare
+def test_rotation(setup_mpl):
+    x = np.linspace(0, 2 * np.pi)
+    y = np.sin(x)
+
+    fig, axes = plt.subplots(2, 2, sharex=True, sharey=True)
+
+    axes = axes.flatten()
+
+    axes[0].set_title("Rotated by 45")
+    (line,) = axes[0].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, rotation=45)
+
+    axes[1].set_title("Rotated by 45\naligned explicitly off")
+    (line,) = axes[1].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, rotation=45, align=False)
+
+    axes[2].set_title("Aligned explicitly on")
+    (line,) = axes[2].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi, align=True)
+
+    axes[3].set_title("Default")
+    (line,) = axes[3].plot(x, y, label=r"$\sin(x)$")
+    labelLine(line, np.pi)
+    return fig
+
+
 def test_nan_failure():
     x = np.array([0, 1])
     y = np.array([np.nan, np.nan])
