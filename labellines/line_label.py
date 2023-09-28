@@ -87,7 +87,7 @@ class LineLabel(Text):
         outline_width : float
             Width of the outline, by default 8.
         rotation: float, optional
-            If set and align = False, controls the angle of the label
+            If set and align = False, controls the angle of the label.
         """
         # When rotation is set, align has to be false or None
         if rotation is None:
