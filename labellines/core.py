@@ -224,17 +224,18 @@ def labelLines(
 
         # Move xlabel if it is outside valid range
         xdata, _ = normalize_xydata(line)
-        if not (min(xdata) <= xv <= max(xdata)):
+        xmin, xmax = min(xdata), max(xdata)
+        if not (xmin <= xv <= xmax):
             warnings.warn(
                 (
-                    "The value at position {} in `xvals` is outside the range of its "
-                    "associated line (xmin={}, xmax={}, xval={}). Clipping it "
-                    "into the allowed range."
-                ).format(i, min(xdata), max(xdata), xv),
+                    f"The value at position {i} in `xvals` is outside the range of its "
+                    f"associated line ({xmin=}, {xmax=}, xval={xv}). "
+                    "Clipping it into the allowed range."
+                ),
                 UserWarning,
                 stacklevel=1,
             )
-            new_xv = min(xdata) + (max(xdata) - min(xdata)) * 0.9
+            new_xv = xmin + (xmax - xmin) * 0.9
             xvals[i] = new_xv  # type: ignore
 
     # Convert float values back to datetime in case of datetime axis
@@ -250,7 +251,10 @@ def labelLines(
     except TypeError:
         pass
     for line, x, yoffset, label in zip(
-        lab_lines, xvals, yoffsets, labels  # type: ignore
+        lab_lines,
+        xvals,  # type: ignore
+        yoffsets,  # type: ignore
+        labels,
     ):
         txts.append(
             labelLine(
