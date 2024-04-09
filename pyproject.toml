@@ -14,16 +14,15 @@ filterwarnings = [
     "error",
 ]
 
-[tool.ruff]
-# Enable Pyflakes `E` and `F` codes by default.
-select = ["E", "C", "F", "U", "B", "A", "YTT", "S", "N"]
+[tool.ruff.lint]
 ignore = ["N802", "N806", "C901", "UP007"]
-target-version = 'py38'
+select = ["E", "C", "F", "UP", "B", "A", "YTT", "S", "N"]
 
-[tool.ruff.per-file-ignores]
+
+[tool.ruff.lint.per-file-ignores]
 "**/test*.py" = ["S101"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 combine-as-imports = true
 known-first-party = ["labellines"]
 known-third-party = [
