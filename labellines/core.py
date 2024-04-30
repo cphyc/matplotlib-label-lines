@@ -76,10 +76,9 @@ def labelLine(
         if "does not have a well defined value" in str(err):
             warnings.warn(
                 (
-                    "%s could not be annotated due to `nans` values. "
+                    f"{line} could not be annotated due to `nans` values. "
                     "Consider using another location via the `x` argument."
-                )
-                % line,
+                ),
                 UserWarning,
                 stacklevel=1,
             )
@@ -161,7 +160,7 @@ def labelLines(
                 continue
 
             warnings.warn(
-                "Tried to label line %s, but could not find a label for it." % line,
+                f"Tried to label line {line}, but could not find a label for it.",
                 UserWarning,
                 stacklevel=1,
             )
