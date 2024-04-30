@@ -35,7 +35,7 @@ def test_ylogspace(setup_mpl):
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(x, np.exp(k * x), label=r"$f(x)=\exp(%s x)$" % k)
+        plt.plot(x, np.exp(k * x), label=rf"$f(x)=\exp({k} x)$")
 
     plt.yscale("log")
     labelLines(plt.gca().get_lines(), zorder=2.5)
@@ -50,7 +50,7 @@ def test_xlogspace(setup_mpl):
     K = [1, 2, 4]
 
     for k in K:
-        plt.plot(10**x, k * x, label=r"$f(x)=%s x$" % k)
+        plt.plot(10**x, k * x, label=rf"$f(x)={k} x$")
 
     plt.xscale("log")
     # NOTE: depending on roundoff, the upper limit may be
