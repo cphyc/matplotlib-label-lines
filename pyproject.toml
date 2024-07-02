@@ -1,13 +1,56 @@
 [build-system]
-# See https://github.com/scipy/scipy/pull/10431 for the AIX issue.
-requires = [
-  "setuptools>=19.6",
-  "wheel",
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "matplotlib-label-lines"
+dynamic = ["version"]
+description = "Label lines in matplotlib."
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "Corentin Cadiou", email = "contact@cphyc.me" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Framework :: Matplotlib",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: AIX",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "matplotlib>=2.0.2",
+    "more-itertools",
+    "numpy>=1.16",
 ]
 
-[tool.black]
-line-length = 88
-target-version = ['py38', 'py39', 'py310', 'py311']
+[project.optional-dependencies]
+test = [
+    "matplotlib==3.9.0",
+    "pytest-cov==4.0.0",
+    "pytest-mpl==0.16.1",
+    "pytest==7.3.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/cphyc/matplotlib-label-lines"
+
+[tool.hatch.version]
+path = "labellines/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/labellines",
+]
+[tool.hatch.build.targets.wheel]
+packages = [
+    "labellines",
+]
 
 [tool.pytest.ini_options]
 filterwarnings = [

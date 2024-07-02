@@ -291,7 +291,7 @@ def test_label_datetime_plot(setup_mpl):
     )
     y = np.array([13.86, 14.85, 28.71, 42.57, 61.38, 76.23, 77.22, 81.18])
 
-    line = plt.plot_date(x, y, "-")[0]
+    line = plt.plot(x, y, "-")[0]
     plt.xticks(rotation=45)
 
     # should not throw an error
