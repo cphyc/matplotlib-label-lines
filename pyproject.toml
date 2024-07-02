@@ -47,6 +47,10 @@ path = "labellines/__init__.py"
 include = [
     "/labellines",
 ]
+[tool.hatch.build.targets.wheel]
+packages = [
+    "labellines",
+]
 
 [tool.pytest.ini_options]
 filterwarnings = [
