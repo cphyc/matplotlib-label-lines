@@ -31,10 +31,10 @@ dependencies = [
 
 [project.optional-dependencies]
 test = [
-    "matplotlib==3.9.0",
-    "pytest-cov==4.0.0",
-    "pytest-mpl==0.16.1",
-    "pytest==7.3.1",
+    "matplotlib==3.9.2",
+    "pytest-cov==5.0.0",
+    "pytest-mpl==0.17.0",
+    "pytest==8.3.3",
 ]
 
 [project.urls]
