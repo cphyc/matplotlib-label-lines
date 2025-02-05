@@ -1,10 +1,8 @@
-from typing import Tuple
-
 import numpy as np
 from matplotlib.lines import Line2D
 
 
-def normalize_xydata(line: Line2D) -> Tuple[np.ndarray, np.ndarray]:
+def normalize_xydata(line: Line2D) -> tuple[np.ndarray, np.ndarray]:
     """Make sure datetime values are properly converted to floats and convert
     into data coordinates."""
     # Convert the data into the data coordinates

@@ -1,5 +1,5 @@
 import warnings
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -92,7 +92,7 @@ def labelLine(
 
 
 def labelLines(
-    lines: Optional[List[Line2D]] = None,
+    lines: Optional[list[Line2D]] = None,
     align: Optional[bool] = None,
     xvals: Optional[Union[tuple[float, float], list[float]]] = None,
     drop_label: bool = False,
