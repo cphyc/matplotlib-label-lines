@@ -7,7 +7,7 @@ name = "matplotlib-label-lines"
 dynamic = ["version"]
 description = "Label lines in matplotlib."
 license = "MIT"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 authors = [
     { name = "Corentin Cadiou", email = "contact@cphyc.me" },
 ]
