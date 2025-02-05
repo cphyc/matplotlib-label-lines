@@ -238,7 +238,12 @@ def labelLines(
             xvals[i] = new_xv  # type: ignore
 
     # Convert float values back to datetime in case of datetime axis
-    if isinstance(ax.xaxis.converter, DateConverter):
+    mpl_version = tuple(int(_) for _ in plt.matplotlib.__version__.split("."))
+    if mpl_version < (3, 10, 0):
+        converter = ax.xaxis.converter
+    else:
+        converter = ax.xaxis.get_converter()
+    if isinstance(converter, DateConverter):
         xvals = [
             num2date(x).replace(tzinfo=ax.xaxis.get_units())
             for x in xvals  # type: ignore
