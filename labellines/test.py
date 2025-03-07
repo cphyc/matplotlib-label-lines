@@ -315,17 +315,22 @@ def test_label_datetime_plot(setup_mpl):
     return plt.gcf()
 
 
-def test_yoffset(setup_mpl):
+def test_xyoffset(setup_mpl):
     x = np.linspace(0, 1)
 
-    for yoffset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
+    for offset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
         plt.clf()
         ax = plt.gca()
         ax.plot(x, np.sin(x) * 10, label=r"$\sin x$")
         ax.plot(x, np.cos(x) * 10, label=r"$\cos x$")
         lines = ax.get_lines()
         labelLines(
-            lines, xvals=(0.2, 0.7), align=False, yoffsets=yoffset, bbox={"alpha": 0}
+            lines,
+            xvals=(0.2, 0.7),
+            xoffsets=offset,
+            yoffsets=offset,
+            align=False,
+            bbox={"alpha": 0},
         )
 
 

@@ -35,6 +35,12 @@ class LineLabel(Text):
     _auto_align: bool
     """Align text with the line (True) or parallel to x axis (False)"""
 
+    _xoffset: float
+    """An additional x offset for the label"""
+
+    _xoffset_logspace: bool
+    """Sets whether to treat _xoffset exponentially"""
+
     _yoffset: float
     """An additional y offset for the label"""
 
@@ -56,6 +62,8 @@ class LineLabel(Text):
         x: Position,
         label: Optional[str] = None,
         align: Optional[bool] = None,
+        xoffset: float = 0,
+        xoffset_logspace: bool = False,
         yoffset: float = 0,
         yoffset_logspace: bool = False,
         outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
@@ -76,6 +84,11 @@ class LineLabel(Text):
         align : bool, optional
             If true, the label is parallel to the line, otherwise horizontal,
             by default True.
+        xoffset : float, optional
+            An additional x offset for the line label, by default 0.
+        xoffset_logspace : bool, optional
+            If true xoffset is applied exponentially to appear linear on a log-axis,
+            by default False.
         yoffset : float, optional
             An additional y offset for the line label, by default 0.
         yoffset_logspace : bool, optional
@@ -108,6 +121,8 @@ class LineLabel(Text):
         self._target_x = x
         self._ax = line.axes
         self._auto_align = align
+        self._xoffset = xoffset
+        self._xoffset_logspace = xoffset_logspace
         self._yoffset = yoffset
         self._yoffset_logspace = yoffset_logspace
         label = label or line.get_label()
@@ -184,6 +199,12 @@ class LineLabel(Text):
             y = np.interp(x, dx[srt], dy[srt])
         else:  # Vertical case
             y = (ya + yb) / 2
+
+        # Apply x offset
+        if self._xoffset_logspace:
+            x *= 10**self._xoffset
+        else:
+            x += self._xoffset
 
         # Apply y offset
         if self._yoffset_logspace:
