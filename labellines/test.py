@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -165,6 +165,19 @@ def test_dateaxis_advanced(setup_mpl):
     ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
 
     labelLines(ax.get_lines())
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
+def test_dateaxis_timedelta_xoffset(setup_mpl):
+    dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
+    dt = timedelta(hours=12)
+
+    plt.plot(dates, [0, 1, 2], label="apples")
+    plt.plot(dates, [3, 4, 5], label="banana")
+    ax = plt.gca()
+
+    labelLines(ax.get_lines(), xoffsets=dt)
     return plt.gcf()
 
 
