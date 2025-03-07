@@ -165,8 +165,6 @@ class LineLabel(Text):
         mask = np.isfinite(ydata)
         if mask.sum() == 0:
             raise ValueError(f"The line {self._line} only contains nan!")
-        xdata = xdata[mask]
-        ydata = ydata[mask]
 
         # Find the first line segment surrounding x
         for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
