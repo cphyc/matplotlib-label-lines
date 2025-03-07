@@ -164,7 +164,7 @@ def test_dateaxis_advanced(setup_mpl):
     ax.xaxis.set_major_locator(DayLocator())
     ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d"))
 
-    labelLines(ax.get_lines())
+    labelLines(ax.get_lines(), xvals=(dates[0], dates[-1]))
     return plt.gcf()
 
 
