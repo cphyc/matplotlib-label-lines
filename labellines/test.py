@@ -244,6 +244,20 @@ def test_nan_failure():
 
 
 @pytest.mark.mpl_image_compare
+def test_nan_gaps(setup_mpl):
+    x = np.linspace(0, 10, 100)
+    x[10:30] = np.nan
+
+    for i in range(10):
+        y = np.sin(x + i)
+        plt.plot(x, y, label=f"y={i}")
+
+    labelLines(plt.gca().get_lines())
+
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
 def test_label_range(setup_mpl):
     x = np.linspace(0, 1)
     line = plt.plot(x, x**2, label="lorem ipsum")[0]
