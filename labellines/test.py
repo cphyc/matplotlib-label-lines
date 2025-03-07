@@ -250,7 +250,7 @@ def test_nan_gaps(setup_mpl):
 
     for i in range(10):
         y = np.sin(x + i)
-        plt.plot(x, y, label=f'y={i}')
+        plt.plot(x, y, label=f"y={i}")
 
     labelLines(plt.gca().get_lines())
 
