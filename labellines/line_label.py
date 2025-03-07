@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import matplotlib.dates as mdates
 import matplotlib.patheffects as patheffects
 import numpy as np
+from datetime import timedelta
 from matplotlib.text import Text
 
 from .utils import normalize_xydata
@@ -177,6 +179,13 @@ class LineLabel(Text):
         x = self._line.convert_xunits(self._target_x)
         xdata, ydata = normalize_xydata(self._line)
 
+        # Convert timedelta to float if needed
+        if isinstance(self._xoffset, timedelta):
+            xoffset = mdates.date2num(self._xoffset + self._target_x) - x
+        else:
+            xoffset = self._xoffset
+
+        # Handle nan values
         mask = np.isfinite(ydata)
         if mask.sum() == 0:
             raise ValueError(f"The line {self._line} only contains nan!")
@@ -202,9 +211,9 @@ class LineLabel(Text):
 
         # Apply x offset
         if self._xoffset_logspace:
-            x *= 10**self._xoffset
+            x *= 10**xoffset
         else:
-            x += self._xoffset
+            x += xoffset
 
         # Apply y offset
         if self._yoffset_logspace:

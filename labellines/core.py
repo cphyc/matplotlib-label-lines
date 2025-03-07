@@ -1,10 +1,15 @@
 import warnings
 from typing import Optional, Union
-
+from datetime import timedelta
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.container import ErrorbarContainer
-from matplotlib.dates import DateConverter, num2date
+from matplotlib.dates import (
+    _SwitchableDateConverter,
+    ConciseDateConverter,
+    DateConverter,
+    num2date,
+)
 from matplotlib.lines import Line2D
 from more_itertools import always_iterable
 
@@ -256,7 +261,8 @@ def labelLines(
         converter = ax.xaxis.converter
     else:
         converter = ax.xaxis.get_converter()
-    if isinstance(converter, DateConverter):
+    time_classes = (_SwitchableDateConverter, DateConverter, ConciseDateConverter)
+    if isinstance(converter, time_classes):
         xvals = [
             num2date(x).replace(tzinfo=ax.xaxis.get_units())
             for x in xvals  # type: ignore
@@ -264,7 +270,10 @@ def labelLines(
 
     txts = []
     try:
-        xoffsets = [float(xoffsets)] * len(all_lines)  # type: ignore
+        if isinstance(xoffsets, timedelta):
+            xoffsets = [xoffsets] * len(all_lines)  # type: ignore
+        else:
+            xoffsets = [float(xoffsets)] * len(all_lines)  # type: ignore
     except TypeError:
         pass
     try:
