@@ -213,6 +213,8 @@ def labelLines(
             xvals[order] = old_xvals  # type: ignore
     else:
         xvals = list(always_iterable(xvals))  # force the creation of a copy
+        if len(xvals) == 1:
+            xvals = [xvals[0]] * len(all_lines)
 
     lab_lines, labels = [], []
     # Take only the lines which have labels other than the default ones
