@@ -361,6 +361,13 @@ def test_auto_layout(setup_mpl):
     return plt.gcf()
 
 
+@pytest.mark.mpl_image_compare
+def test_single_point_line(setup_mpl):
+    plt.plot(1, 1, label="x")
+    labelLines(plt.gca().get_lines())
+    return plt.gcf()
+
+
 def test_warning_out_of_range():
     X = [0, 1]
     Y = [0, 1]
