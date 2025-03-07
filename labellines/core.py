@@ -191,6 +191,10 @@ def labelLines(
         # Convert datetime objects to numeric values for linspace/geomspace
         x_is_datetime = isinstance(xmin, datetime) or isinstance(xmax, datetime)
         if x_is_datetime:
+            if not isinstance(xmin, datetime) or not isinstance(xmax, datetime):
+                raise ValueError(
+                    f"Cannot mix datetime and numeric values in xvals: {xvals}"
+                )
             xmin = plt.matplotlib.dates.date2num(xmin)
             xmax = plt.matplotlib.dates.date2num(xmax)
 
