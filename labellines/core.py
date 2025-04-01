@@ -3,8 +3,9 @@ from typing import Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
 from matplotlib.container import ErrorbarContainer
-from matplotlib.dates import DateConverter, num2date
+from matplotlib.dates import DateConverter, num2date, _SwitchableDateConverter
 from matplotlib.lines import Line2D
 from more_itertools import always_iterable
 
@@ -245,9 +246,11 @@ def labelLines(
         converter = ax.xaxis.converter
     else:
         converter = ax.xaxis.get_converter()
-    if isinstance(converter, DateConverter):
+    if isinstance(converter, (DateConverter, _SwitchableDateConverter)):
         xvals = [
-            num2date(x).replace(tzinfo=ax.xaxis.get_units())
+            x  # type: ignore
+            if isinstance(x, (np.datetime64, datetime))
+            else num2date(x).replace(tzinfo=ax.xaxis.get_units())
             for x in xvals  # type: ignore
         ]
 
