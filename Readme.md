@@ -57,14 +57,15 @@ lines = ax.get_lines()
 l1 = lines[-1]
 labelLine(
     l1,
-    0.6,
+    0.85,
     label=r"$Re=${}".format(l1.get_label()),
-    ha="left",
-    va="bottom",
     align=False,
+    yoffset=0.01,
+    ha="right",
     backgroundcolor="none",
 )
-labelLines(lines[:-1], yoffsets=0.01, align=False, backgroundcolor="none")
+labelLines(lines[:-1], xvals=0.85, yoffsets=0.01, align=False,
+           ha="right", backgroundcolor="none")
 
 # labelLines also supports log-scaled x-axes
 ax = axes[4]
