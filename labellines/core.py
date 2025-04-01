@@ -1,10 +1,15 @@
 import warnings
 from typing import Optional, Union
-
+from datetime import timedelta
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.container import ErrorbarContainer
-from matplotlib.dates import DateConverter, num2date
+from matplotlib.dates import (
+    _SwitchableDateConverter,
+    ConciseDateConverter,
+    DateConverter,
+    num2date,
+)
 from matplotlib.lines import Line2D
 from more_itertools import always_iterable
 
@@ -19,6 +24,8 @@ def labelLine(
     label: Optional[str] = None,
     align: Optional[bool] = None,
     drop_label: bool = False,
+    xoffset: float = 0,
+    xoffset_logspace: bool = False,
     yoffset: float = 0,
     yoffset_logspace: bool = False,
     outline_color: str = "auto",
@@ -43,6 +50,11 @@ def labelLine(
     drop_label : bool, optional
        If True, the label is consumed by the function so that subsequent
        calls to e.g. legend do not use it anymore.
+    xoffset : double, optional
+        Space to add to label's x position
+    xoffset_logspace : bool, optional
+        If True, then xoffset will be added to the label's x position in
+        log10 space
     yoffset : double, optional
         Space to add to label's y position
     yoffset_logspace : bool, optional
@@ -65,6 +77,8 @@ def labelLine(
             x,
             label=label,
             align=align,
+            xoffset=xoffset,
+            xoffset_logspace=xoffset_logspace,
             yoffset=yoffset,
             yoffset_logspace=yoffset_logspace,
             outline_color=outline_color,
@@ -97,6 +111,7 @@ def labelLines(
     xvals: Optional[Union[tuple[float, float], list[float]]] = None,
     drop_label: bool = False,
     shrink_factor: float = 0.05,
+    xoffsets: Union[float, list[float]] = 0,
     yoffsets: Union[float, list[float]] = 0,
     outline_color: str = "auto",
     outline_width: float = 5,
@@ -120,6 +135,9 @@ def labelLines(
        calls to e.g. legend do not use it anymore.
     shrink_factor : double, optional
        Relative distance from the edges to place closest labels. Defaults to 0.05.
+    xoffsets : number or list, optional.
+        Distance relative to the line when positioning the labels. If given a number,
+        the same value is used for all lines.
     yoffsets : number or list, optional.
         Distance relative to the line when positioning the labels. If given a number,
         the same value is used for all lines.
@@ -243,7 +261,8 @@ def labelLines(
         converter = ax.xaxis.converter
     else:
         converter = ax.xaxis.get_converter()
-    if isinstance(converter, DateConverter):
+    time_classes = (_SwitchableDateConverter, DateConverter, ConciseDateConverter)
+    if isinstance(converter, time_classes):
         xvals = [
             num2date(x).replace(tzinfo=ax.xaxis.get_units())
             for x in xvals  # type: ignore
@@ -251,12 +270,20 @@ def labelLines(
 
     txts = []
     try:
+        if isinstance(xoffsets, timedelta):
+            xoffsets = [xoffsets] * len(all_lines)  # type: ignore
+        else:
+            xoffsets = [float(xoffsets)] * len(all_lines)  # type: ignore
+    except TypeError:
+        pass
+    try:
         yoffsets = [float(yoffsets)] * len(all_lines)  # type: ignore
     except TypeError:
         pass
-    for line, x, yoffset, label in zip(
+    for line, x, xoffset, yoffset, label in zip(
         lab_lines,
         xvals,  # type: ignore
+        xoffsets,  # type: ignore
         yoffsets,  # type: ignore
         labels,
     ):
@@ -267,6 +294,7 @@ def labelLines(
                 label=label,
                 align=align,
                 drop_label=drop_label,
+                xoffset=xoffset,
                 yoffset=yoffset,
                 outline_color=outline_color,
                 outline_width=outline_width,

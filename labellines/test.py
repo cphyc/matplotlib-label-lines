@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -169,6 +169,19 @@ def test_dateaxis_advanced(setup_mpl):
 
 
 @pytest.mark.mpl_image_compare
+def test_dateaxis_timedelta_xoffset(setup_mpl):
+    dates = [datetime(2018, 11, 1), datetime(2018, 11, 2), datetime(2018, 11, 3)]
+    dt = timedelta(hours=12)
+
+    plt.plot(dates, [0, 1, 2], label="apples")
+    plt.plot(dates, [3, 4, 5], label="banana")
+    ax = plt.gca()
+
+    labelLines(ax.get_lines(), xoffsets=dt)
+    return plt.gcf()
+
+
+@pytest.mark.mpl_image_compare
 def test_polar(setup_mpl):
     t = np.linspace(0, 2 * np.pi, num=128)
     plt.plot(np.cos(t), np.sin(t), label="$1/1$")
@@ -315,17 +328,22 @@ def test_label_datetime_plot(setup_mpl):
     return plt.gcf()
 
 
-def test_yoffset(setup_mpl):
+def test_xyoffset(setup_mpl):
     x = np.linspace(0, 1)
 
-    for yoffset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
+    for offset in ([-0.5, 0.5], 1, 1.2):  # try lists  # try int  # try float
         plt.clf()
         ax = plt.gca()
         ax.plot(x, np.sin(x) * 10, label=r"$\sin x$")
         ax.plot(x, np.cos(x) * 10, label=r"$\cos x$")
         lines = ax.get_lines()
         labelLines(
-            lines, xvals=(0.2, 0.7), align=False, yoffsets=yoffset, bbox={"alpha": 0}
+            lines,
+            xvals=(0.2, 0.7),
+            xoffsets=offset,
+            yoffsets=offset,
+            align=False,
+            bbox={"alpha": 0},
         )
 
 
