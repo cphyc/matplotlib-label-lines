@@ -284,12 +284,16 @@ def labelLines(
         converter = ax.xaxis.get_converter()
     time_classes = (_SwitchableDateConverter, DateConverter, ConciseDateConverter)
     if isinstance(converter, time_classes):
-        xvals = [
-            x  # type: ignore
-            if isinstance(x, (np.datetime64, datetime))
-            else num2date(x).replace(tzinfo=ax.xaxis.get_units())
-            for x in xvals  # type: ignore
-        ]
+        xvals_dates = []
+        for x in xvals:  # type: ignore
+            if isinstance(x, datetime):
+                x_datetime = x
+            elif isinstance(x, np.datetime64):
+                x_datetime = x.astype(datetime)
+            else:
+                x_datetime = num2date(x)
+            xvals_dates.append(x_datetime.replace(tzinfo=ax.xaxis.get_units()))
+        xvals = xvals_dates  # type: ignore
 
     txts = []
     try:
