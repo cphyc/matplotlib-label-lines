@@ -192,13 +192,18 @@ class LineLabel(Text):
         xdata = xdata[mask]
         ydata = ydata[mask]
 
-        # Find the first line segment surrounding x
-        for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
-            if min(xa, xb) <= x <= max(xa, xb):
-                ya, yb = ydata[i], ydata[i + 1]
-                break
+        # If the valid data is a single point, then just use that point
+        if len(xdata) == 1:
+            xa, xb = xdata[0], xdata[0]
+            ya, yb = ydata[0], ydata[0]
         else:
-            raise ValueError("x label location is outside data range!")
+            # Find the first line segment surrounding x
+            for i, (xa, xb) in enumerate(zip(xdata[:-1], xdata[1:])):
+                if min(xa, xb) <= x <= max(xa, xb):
+                    ya, yb = ydata[i], ydata[i + 1]
+                    break
+            else:
+                raise ValueError("x label location is outside data range!")
 
         # Interpolate y position of label, (interp needs sorted data)
         if xa != xb:
