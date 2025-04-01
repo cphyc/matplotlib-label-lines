@@ -230,7 +230,7 @@ def labelLines(
 
         for i, line in enumerate(all_lines):
             xdata, _ = normalize_xydata(line)
-            minx, maxx = min(xdata), max(xdata)
+            minx, maxx = np.nanmin(xdata), np.nanmax(xdata)
             for j, xv in enumerate(xvals):  # type: ignore
                 xv = line.convert_xunits(xv)
                 ok_matrix[i, j] = minx < xv < maxx
@@ -260,7 +260,7 @@ def labelLines(
 
         # Move xlabel if it is outside valid range
         xdata, _ = normalize_xydata(line)
-        xmin, xmax = min(xdata), max(xdata)
+        xmin, xmax = np.nanmin(xdata), np.nanmax(xdata)
         xv = line.convert_xunits(xv)
 
         if not (xmin <= xv <= xmax):
