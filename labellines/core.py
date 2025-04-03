@@ -283,9 +283,14 @@ def labelLines(
     else:
         converter = ax.xaxis.get_converter()
     time_classes = (_SwitchableDateConverter, DateConverter, ConciseDateConverter)
-    if isinstance(converter, time_classes):
+    if xvals is None:
+        raise ValueError(
+            "xvals must be a tuple of two floats or a list of floats."
+            f"Got {xvals} instead."
+        )
+    elif isinstance(converter, time_classes):
         xvals_dates = []
-        for x in xvals:  # type: ignore
+        for x in xvals:
             if isinstance(x, datetime):
                 x_datetime = x
             elif isinstance(x, np.datetime64):
@@ -293,7 +298,7 @@ def labelLines(
             else:
                 x_datetime = num2date(x)
             xvals_dates.append(x_datetime.replace(tzinfo=ax.xaxis.get_units()))
-        xvals = xvals_dates  # type: ignore
+        xvals = xvals_dates
 
     txts = []
     try:
