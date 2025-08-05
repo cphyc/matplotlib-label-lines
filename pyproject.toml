@@ -58,7 +58,7 @@ filterwarnings = [
 ]
 
 [tool.ruff.lint]
-ignore = ["N802", "N806", "C901", "UP007"]
+ignore = ["N802", "N806", "C901"]
 select = ["E", "C", "F", "UP", "B", "A", "YTT", "S", "N"]
 
 

@@ -1,5 +1,8 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import warnings
-from typing import Optional, Union
 from datetime import timedelta
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,13 +20,16 @@ from more_itertools import always_iterable
 from .line_label import LineLabel
 from .utils import maximum_bipartite_matching, normalize_xydata
 
+if TYPE_CHECKING:
+    from line_label import Position
+
 
 # Label line with line2D label data
 def labelLine(
     line: Line2D,
-    x,
-    label: Optional[str] = None,
-    align: Optional[bool] = None,
+    x: Position,
+    label: str | None = None,
+    align: bool | None = None,
     drop_label: bool = False,
     xoffset: float = 0,
     xoffset_logspace: bool = False,
@@ -31,7 +37,7 @@ def labelLine(
     yoffset_logspace: bool = False,
     outline_color: str = "auto",
     outline_width: float = 8,
-    rotation: Optional[float] = None,
+    rotation: float | None = None,
     **kwargs,
 ):
     """
@@ -107,16 +113,16 @@ def labelLine(
 
 
 def labelLines(
-    lines: Optional[list[Line2D]] = None,
-    align: Optional[bool] = None,
-    xvals: Optional[Union[tuple[float, float], list[float]]] = None,
+    lines: list[Line2D] | None = None,
+    align: bool | None = None,
+    xvals: tuple[Position, Position] | list[Position] | None = None,
     drop_label: bool = False,
     shrink_factor: float = 0.05,
-    xoffsets: Union[float, list[float]] = 0,
-    yoffsets: Union[float, list[float]] = 0,
+    xoffsets: float | list[float] = 0,
+    yoffsets: float | list[float] = 0,
     outline_color: str = "auto",
     outline_width: float = 5,
-    rotation: Optional[bool] = None,
+    rotation: bool | None = None,
     **kwargs,
 ):
     """Label all lines with their respective legends.
@@ -266,8 +272,9 @@ def labelLines(
         if not (xmin <= xv <= xmax):
             warnings.warn(
                 (
-                    f"The value at position {i} in `xvals` is outside the range of its "
-                    f"associated line ({xmin=}, {xmax=}, xval={xv}). "
+                    f"The value at position {i} in `xvals` is outside the "
+                    "range of its associated line "
+                    f"({xmin=}, {xmax=}, xval={xv}). "
                     "Clipping it into the allowed range."
                 ),
                 UserWarning,
