@@ -12,7 +12,7 @@ from .utils import normalize_xydata
 
 if TYPE_CHECKING:
     from datetime import datetime
-    from typing import Any, Literal, Optional, Union
+    from typing import Any, Literal, Union
 
     from matplotlib.axes import Axes
     from matplotlib.lines import Line2D
@@ -62,15 +62,15 @@ class LineLabel(Text):
         self,
         line: Line2D,
         x: Position,
-        label: Optional[str] = None,
-        align: Optional[bool] = None,
+        label: str | None = None,
+        align: bool | None = None,
         xoffset: float = 0,
         xoffset_logspace: bool = False,
         yoffset: float = 0,
         yoffset_logspace: bool = False,
-        outline_color: Optional[Union[AutoLiteral, ColorLike]] = "auto",
+        outline_color: AutoLiteral | ColorLike | None = "auto",
         outline_width: float = 8,
-        rotation: Optional[float] = None,
+        rotation: float | None = None,
         **kwargs,
     ) -> None:
         """
