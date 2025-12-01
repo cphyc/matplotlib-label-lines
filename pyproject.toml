@@ -33,7 +33,7 @@ dependencies = [
 test = [
     "matplotlib==3.10.1",
     "pytest-cov==7.0.0",
-    "pytest-mpl==0.17.0",
+    "pytest-mpl==0.18.0",
     "pytest==8.4.2",
 ]
 
