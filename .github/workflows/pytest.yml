@@ -30,7 +30,7 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --mpl --mpl-results-path=results --mpl-generate-summary=html
-    - uses: actions/upload-artifact@v5
+    - uses: actions/upload-artifact@v6
       if: failure()
       with:
         name: pytest-${{ matrix.python-version }}-results
