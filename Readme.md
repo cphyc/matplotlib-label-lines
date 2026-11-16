@@ -64,8 +64,14 @@ labelLine(
     ha="right",
     backgroundcolor="none",
 )
-labelLines(lines[:-1], xvals=0.85, yoffsets=0.01, align=False,
-           ha="right", backgroundcolor="none")
+labelLines(
+    lines[:-1],
+    xvals=0.85,
+    yoffsets=0.01,
+    align=False,
+    ha="right",
+    backgroundcolor="none",
+)
 
 # labelLines also supports log-scaled x-axes
 ax = axes[4]
